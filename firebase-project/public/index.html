@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KuroStream | Ultra-Fluid Experience</title>
+    <title>KuroStream | Local Performance</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #ff003c;
-            --primary-glow: rgba(255, 0, 60, 0.6);
+            --primary-glow: rgba(255, 0, 60, 0.4);
             --bg-deep: #050505;
             --card-bg: #0d0d0f;
-            /* Apple-like motion curve (Ultra smooth) */
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         body {
@@ -30,132 +28,74 @@
         }
 
         .font-bebas { font-family: 'Bebas Neue', cursive; }
-        .font-inter { font-family: 'Inter', sans-serif; }
 
         .crimson-gradient {
-            background: linear-gradient(90deg, #ff003c 0%, #cc0030 100%);
+            background: linear-gradient(135deg, #ff003c 0%, #990024 100%);
         }
 
         .hero-mask {
-            background: linear-gradient(to right, 
-                var(--bg-deep) 0%, 
-                rgba(5, 5, 5, 0.8) 25%, 
-                rgba(5, 5, 5, 0.2) 60%, 
-                transparent 100%),
-                linear-gradient(to top, var(--bg-deep) 5%, transparent 40%);
-            pointer-events: none;
+            background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.6) 30%, transparent 100%),
+                        linear-gradient(to top, var(--bg-deep) 10%, transparent 50%);
         }
 
-        /* Performance Optimizations to prevent Lag */
+        /* Transición de Imagen Local Ultra Rápida */
         #hero-img {
-            transition: opacity 1s var(--ease-out-expo), 
-                        transform 1.4s var(--ease-out-expo),
-                        filter 1s var(--ease-out-expo);
-            will-change: opacity, transform, filter; /* GPU Acceleration */
-            filter: brightness(0.6) contrast(1.1);
+            transition: opacity 0.5s ease-in-out, filter 0.5s ease-in-out;
+            filter: brightness(0.6);
         }
 
         .img-hidden {
             opacity: 0;
-            transform: scale(1.08);
-            filter: brightness(0) blur(30px);
+            filter: brightness(0) blur(10px);
         }
 
-        /* Ultra Fluid Text Animations */
+        /* Animación de Texto Lateral (Slide) */
         .hero-text-anim {
-            animation: heroReveal 1.2s var(--ease-out-expo) forwards;
-            will-change: transform, opacity, filter;
+            animation: heroSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        @keyframes heroReveal {
-            0% { opacity: 0; transform: translateX(60px); filter: blur(20px); }
+        @keyframes heroSlideIn {
+            0% { opacity: 0; transform: translateX(40px); filter: blur(10px); }
             100% { opacity: 1; transform: translateX(0); filter: blur(0); }
         }
 
         .hero-text-exit {
-            animation: heroFadeOut 0.8s var(--ease-out-expo) forwards;
-            will-change: transform, opacity, filter;
+            animation: heroSlideOut 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        @keyframes heroFadeOut {
-            0% { opacity: 1; transform: translateX(0); filter: blur(0); }
-            100% { opacity: 0; transform: translateX(-40px); filter: blur(15px); }
+        @keyframes heroSlideOut {
+            0% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(-40px); filter: blur(10px); }
         }
 
-        /* Improved Premium Button */
-        .btn-premium {
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
-            will-change: transform;
+        .anime-card {
+            background: var(--card-bg);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        .btn-premium::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -60%;
-            width: 20%; height: 200%;
-            background: rgba(255,255,255,0.1);
-            transform: rotate(30deg);
-            transition: all 0.6s var(--ease-out-expo);
-        }
-
-        .btn-premium:hover::after {
-            left: 130%;
-        }
-
-        .btn-premium:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 40px var(--primary-glow);
+        .anime-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px -15px var(--primary-glow);
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s var(--ease-out-expo);
         }
 
-        /* Modal Styles */
-        #dev-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 200;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            justify-content: center;
-            align-items: center;
+        /* Clase para ocultar contenido inicialmente */
+        .reveal-init {
             opacity: 0;
-            transition: opacity 0.4s var(--ease-out-expo);
+            transition: opacity 0.8s ease-out;
         }
 
-        #dev-modal.active {
-            display: flex;
-            opacity: 1;
+        .revealed {
+            opacity: 1 !important;
         }
-
-        .modal-content {
-            transform: scale(0.9);
-            transition: transform 0.4s var(--ease-out-expo);
-        }
-
-        #dev-modal.active .modal-content {
-            transform: scale(1);
-        }
-
-        .reveal-init { opacity: 0; }
-        .revealed { opacity: 1 !important; transition: opacity 1.2s ease; }
-
-        .text-outline {
-            -webkit-text-stroke: 1.5px rgba(255,255,255,0.25);
-            color: transparent;
-            transition: -webkit-text-stroke 0.3s ease;
-        }
-
-        /* Global Smooth Scroll */
-        html { scroll-behavior: smooth; }
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
@@ -163,105 +103,75 @@
 </head>
 <body class="antialiased">
 
-    <!-- Modal En Desarrollo -->
-    <div id="dev-modal">
-        <div class="modal-content glass-panel p-12 rounded-3xl max-w-md w-full text-center space-y-6 mx-4">
-            <div class="w-20 h-20 crimson-gradient rounded-full flex items-center justify-center mx-auto shadow-2xl">
-                <i data-lucide="code-2" class="text-white w-10 h-10"></i>
-            </div>
-            <h2 class="text-4xl font-bebas italic tracking-wider uppercase text-white">Sitio en Desarrollo</h2>
-            <div class="space-y-4">
-                <p class="text-gray-400 font-light leading-relaxed">
-                    ¡Bienvenido a KuroStream! Actualmente estamos trabajando para traerte la mejor experiencia de anime con la máxima fluidez.
-                </p>
-                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Sugerencias y Feedback</p>
-                    <span class="text-primary font-bold select-all">jeanmrcode@gmail.com</span>
-                </div>
-            </div>
-            <button onclick="closeModal()" class="w-full crimson-gradient text-white py-4 rounded-xl font-black text-xs uppercase tracking-[0.3em] btn-premium">
-                Explorar sitio
-            </button>
-        </div>
-    </div>
-
     <!-- Navegación -->
-    <nav class="fixed top-0 w-full z-[100] px-8 py-6 flex justify-between items-center transition-all duration-700" id="main-nav">
-        <div class="flex items-center gap-12">
-            <div class="flex items-center gap-3 cursor-pointer group">
-                <div class="w-11 h-11 crimson-gradient rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <i data-lucide="zap" class="text-white fill-current w-6 h-6"></i>
+    <nav class="fixed top-0 w-full z-[100] px-6 py-4 flex justify-between items-center transition-all duration-500" id="main-nav">
+        <div class="flex items-center gap-10">
+            <div class="flex items-center gap-2 cursor-pointer">
+                <div class="w-10 h-10 crimson-gradient rounded-full flex items-center justify-center shadow-[0_0_20px_var(--primary-glow)]">
+                    <i data-lucide="zap" class="text-white fill-current w-5 h-5"></i>
                 </div>
-                <h1 class="text-2xl font-bebas tracking-[0.1em] uppercase">Kuro<span class="text-primary">Stream</span></h1>
+                <h1 class="text-2xl font-bebas tracking-wider uppercase">Kuro<span class="text-primary">Stream</span></h1>
             </div>
-            <div class="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.3em] text-gray-400">
-                <a href="#" class="hover:text-white transition-colors relative">Catálogo</a>
+            <div class="hidden lg:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                <a href="#" class="hover:text-white transition-colors">Catálogo</a>
                 <a href="#" class="hover:text-white transition-colors">Simulcasts</a>
-                <a href="#" class="hover:text-white transition-colors">Originals</a>
+                <a href="#" class="hover:text-white transition-colors">Comunidad</a>
             </div>
         </div>
 
-        <div class="flex items-center gap-6">
-            <button onclick="openModal()" class="text-white font-bold text-[11px] uppercase tracking-widest hover:text-primary transition-all">Login</button>
-            <button onclick="openModal()" class="crimson-gradient text-white font-black text-[11px] uppercase tracking-widest px-8 py-3 rounded-xl btn-premium">
-                Suscribirse
+        <div class="flex items-center gap-4">
+            <button class="bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-all">
+                Acceder
             </button>
         </div>
     </nav>
 
     <main>
         <!-- Hero Section -->
-        <section class="relative h-screen w-full flex items-center overflow-hidden bg-black">
+        <section class="relative h-[95vh] w-full flex items-center overflow-hidden bg-black">
             <div class="absolute inset-0">
+                <!-- Imagen de fondo principal (LOCAL) -->
                 <img id="hero-img" src="" class="w-full h-full object-cover img-hidden" alt="Hero">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
 
-            <div class="relative w-full max-w-[1500px] mx-auto px-8 z-20">
-                <div id="hero-content-wrapper" class="max-w-4xl space-y-10 reveal-init">
-                    <div class="flex items-center gap-5">
-                        <span id="hero-tag" class="bg-primary/20 border border-primary/40 text-primary px-5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-[0.25em] backdrop-blur-md"></span>
-                        <div class="h-[1px] w-16 bg-white/20"></div>
-                        <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.5em]"></span>
+            <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20">
+                <!-- Jean: He añadido reveal-init para que empiece invisible -->
+                <div id="hero-content-wrapper" class="max-w-2xl space-y-6 reveal-init">
+                    <div class="flex items-center gap-3">
+                        <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20"></span>
+                        <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em]"></span>
                     </div>
-                    
-                    <div class="space-y-2">
-                        <h2 id="hero-title" class="text-8xl md:text-[11rem] font-bebas leading-[0.8] text-white uppercase italic tracking-tighter">
-                            <!-- Injected via JS -->
-                        </h2>
-                    </div>
-
-                    <p id="hero-desc" class="text-xl text-gray-400 max-w-xl font-light leading-relaxed border-l border-primary/30 pl-8">
-                        <!-- Injected via JS -->
+                    <h2 id="hero-title" class="text-7xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter">
+                        <!-- Título dinámico -->
+                    </h2>
+                    <p id="hero-desc" class="text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5">
+                        <!-- Descripción dinámica -->
                     </p>
-
-                    <div class="flex items-center gap-8 pt-6">
-                        <button onclick="openModal()" class="crimson-gradient text-white px-14 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center gap-4 btn-premium shadow-2xl">
-                            <i data-lucide="play" class="w-6 h-6 fill-current"></i> Ver Ahora
+                    <div class="flex items-center gap-4 pt-4">
+                        <button class="crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-transform shadow-2xl shadow-primary/30">
+                            <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
                         </button>
-                        <button onclick="openModal()" class="glass-panel text-white px-10 py-5 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                            Detalles
+                        <button class="glass-panel text-white p-4 rounded-full hover:bg-white/10 transition-all">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Minimalist Vertical Indicators -->
-            <div class="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-30" id="indicators"></div>
-            
-            <!-- Bottom Decoration -->
-            <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none"></div>
+            <!-- Indicadores -->
+            <div class="absolute bottom-12 left-6 flex items-end gap-3 z-30" id="indicators"></div>
         </section>
 
-        <!-- Catalog Preview -->
-        <div class="max-w-[1500px] mx-auto px-8 -mt-24 relative z-40 pb-32">
-            <div class="flex justify-between items-end mb-14">
-                <div class="space-y-4">
-                    <h3 class="text-6xl font-bebas tracking-tight italic">NUEVOS <span class="text-primary text-outline">EPISODIOS</span></h3>
-                    <div class="h-1.5 w-32 bg-primary rounded-full"></div>
+        <!-- Cartelera -->
+        <div class="max-w-[1440px] mx-auto px-6 -mt-32 relative z-40 pb-32">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h3 class="text-4xl font-bebas tracking-tighter italic">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Local Cache Enabled</p>
                 </div>
             </div>
-            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-10"></div>
+            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
         </div>
     </main>
 
@@ -269,158 +179,134 @@
     <script>
         const heroSlides = [
             {
-                title: "SOLO <span class='text-primary text-outline'>LEVELING</span>",
-                desc: "Jinwoo desafía a la muerte y despierta un poder que rompe las reglas del mundo. Una evolución sin precedentes ha comenzado.",
-                tag: "Trending #1",
-                info: "Temporada 1 • Acción",
-                img: "https://images.unsplash.com/photo-1578632738980-43314b933a3c?q=80&w=1600"
+                title: "SOLO <span class='text-primary'>LEVELING</span>",
+                desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto en un mundo de cazadores y mazmorras letales.",
+                tag: "Tendencia",
+                info: "S1 • Acción / Fantasía",
+                img: "imagen1.webp"
             },
             {
-                title: "ONE <span class='text-primary text-outline'>PIECE</span>",
-                desc: "El Gear 5 revoluciona el mundo. Luffy y los Sombrero de Paja llegan a la isla del futuro: Egghead.",
+                title: "ONE <span class='text-primary'>PIECE</span>",
+                desc: "La era de la piratería no termina. Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.",
                 tag: "Legendario",
-                info: "Episodio 1115 • Aventura",
-                img: "https://images.unsplash.com/photo-1613333151433-899475024b89?q=80&w=1600"
+                info: "Ep 1115 • Aventura",
+                img: "imagen2.webp"
             },
             {
-                title: "FRIEREN <span class='text-primary text-outline'>ELVES</span>",
-                desc: "Un viaje introspectivo sobre el tiempo y la memoria. La elfa Frieren busca reencontrarse con la humanidad.",
-                tag: "Obra Maestra",
-                info: "Temporada 1 • Fantasía",
-                img: "https://images.unsplash.com/photo-1627337140417-09d375354907?q=80&w=1600"
+                title: "FRIEREN <span class='text-primary'>BEYOND</span>",
+                desc: "Tras derrotar al Rey Demonio, la elfa Frieren comienza un nuevo viaje para entender la brevedad de la vida humana.",
+                tag: "Aclamado",
+                info: "S1 • Viaje / Magia",
+                img: "imagen3.webp"
             },
             {
-                title: "DEMON <span class='text-primary text-outline'>SLAYER</span>",
-                desc: "La batalla definitiva en el Castillo Infinito. La voluntad de los cazadores contra el origen de todos los demonios.",
-                tag: "Must Watch",
-                info: "Hashira Training • Shonen",
-                img: "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1600"
+                title: "DEMON <span class='text-primary'>SLAYER</span>",
+                desc: "La respiración del sol vuelve. Tanjiro y los pilares se preparan para el asalto final al Castillo Infinito.",
+                tag: "Épico",
+                info: "Nueva Temporada • Shonen",
+                img: "imagen4.webp"
             },
             {
-                title: "JUJUTSU <span class='text-primary text-outline'>KAISEN</span>",
-                desc: "El incidente de Shibuya cambió todo. La oscuridad de las maldiciones consume la ciudad de Tokio.",
-                tag: "Impactante",
+                title: "JUJUTSU <span class='text-primary'>KAISEN</span>",
+                desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino mientras las maldiciones toman el control.",
+                tag: "Popular",
                 info: "S2 • Sobrenatural",
-                img: "https://images.unsplash.com/photo-1542332213-31f87348057f?q=80&w=1600"
+                img: "imagen5.webp"
             }
         ];
 
         const catalog = [
-            { t: "Kaiju No. 8", g: "Acción", i: "https://images.unsplash.com/photo-1607604276443-cda2c9309174?q=80&w=400" },
-            { t: "Tokyo Revengers", g: "Drama", i: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=400" },
-            { t: "Mushoku Tensei", g: "Isekai", i: "https://images.unsplash.com/photo-1635273051937-2007469062cc?q=80&w=400" },
-            { t: "Naruto", g: "Ninja", i: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=400" },
-            { t: "Bleach", g: "Espadas", i: "https://images.unsplash.com/photo-1560972550-aba3456b5564?q=80&w=400" },
-            { t: "Blue Lock", g: "Deportes", i: "https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=400" }
+            { t: "Kaiju No. 8", s: "9.2", g: "Acción", i: "https://images.unsplash.com/photo-1607604276443-cda2c9309174?q=80&w=400" },
+            { t: "Tokyo Revengers", s: "8.7", g: "Drama", i: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=400" },
+            { t: "Mushoku Tensei", s: "9.5", g: "Isekai", i: "https://images.unsplash.com/photo-1635273051937-2007469062cc?q=80&w=400" },
+            { t: "Naruto", s: "9.5", g: "Ninja", i: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=400" },
+            { t: "Bleach TYBW", s: "9.9", g: "Espadas", i: "https://images.unsplash.com/photo-1560972550-aba3456b5564?q=80&w=400" },
+            { t: "Blue Lock", s: "9.0", g: "Deportes", i: "https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=400" }
         ];
 
         let currentIdx = 0;
-        let isTransitioning = false;
         const heroImg = document.getElementById('hero-img');
         const heroWrapper = document.getElementById('hero-content-wrapper');
-        const modal = document.getElementById('dev-modal');
-
-        function openModal() {
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
 
         function changeSlide(index, isFirstLoad = false) {
-            if (isTransitioning && !isFirstLoad) return;
-            isTransitioning = true;
-
-            // Exit Phase (Synchronized cross-fade)
+            // Salida de texto y fundido de imagen (solo si no es la primera carga)
             if (!isFirstLoad) {
                 heroWrapper.classList.remove('hero-text-anim');
                 heroWrapper.classList.add('hero-text-exit');
                 heroImg.classList.add('img-hidden');
             }
 
-            const transitionDelay = isFirstLoad ? 0 : 750; 
-
             setTimeout(() => {
                 currentIdx = index;
                 const slide = heroSlides[currentIdx];
                 
+                // Actualizar contenido
                 heroImg.src = slide.img;
                 document.getElementById('hero-title').innerHTML = slide.title;
                 document.getElementById('hero-desc').textContent = slide.desc;
                 document.getElementById('hero-tag').textContent = slide.tag;
                 document.getElementById('hero-info').textContent = slide.info;
                 
+                // Entrada sincronizada
                 heroImg.classList.remove('img-hidden');
                 heroWrapper.classList.remove('hero-text-exit');
                 
-                if (isFirstLoad) heroWrapper.classList.add('revealed');
+                if (isFirstLoad) {
+                    heroWrapper.classList.add('revealed');
+                }
                 
-                requestAnimationFrame(() => {
-                    heroWrapper.classList.add('hero-text-anim');
-                    updateIndicators();
-                    isTransitioning = false;
-                });
-            }, transitionDelay); 
+                void heroWrapper.offsetWidth; // Force reflow
+                heroWrapper.classList.add('hero-text-anim');
+                
+                updateIndicators();
+            }, isFirstLoad ? 0 : 500); 
         }
 
         function updateIndicators() {
             const container = document.getElementById('indicators');
             container.innerHTML = '';
             heroSlides.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = `w-1.5 transition-all duration-700 rounded-full cursor-pointer ${i === currentIdx ? 'h-14 bg-primary shadow-[0_0_20px_var(--primary-glow)]' : 'h-5 bg-white/10 hover:bg-white/40'}`;
-                dot.onclick = () => !isTransitioning && changeSlide(i);
-                container.appendChild(dot);
+                const bar = document.createElement('div');
+                bar.className = `h-1 transition-all duration-700 rounded-full cursor-pointer ${i === currentIdx ? 'w-20 bg-primary shadow-[0_0_20px_var(--primary-glow)]' : 'w-6 bg-white/20 hover:bg-white/40'}`;
+                bar.onclick = () => changeSlide(i);
+                container.appendChild(bar);
             });
         }
 
         function init() {
-            // Render catalog
+            // Cargar grilla
             const grid = document.getElementById('anime-grid');
             catalog.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "anime-card rounded-3xl overflow-hidden group cursor-pointer shadow-2xl bg-white/5";
+                card.className = "anime-card rounded-xl overflow-hidden group cursor-pointer";
                 card.innerHTML = `
-                    <div class="relative aspect-[2/3] overflow-hidden" onclick="openModal()">
-                        <img src="${item.i}" loading="lazy" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" alt="${item.t}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <span class="text-primary font-black text-[10px] uppercase block mb-2 tracking-[0.2em]">${item.g}</span>
-                            <h4 class="text-base font-bold truncate text-white uppercase tracking-tight">${item.t}</h4>
+                    <div class="relative aspect-[2/3] overflow-hidden">
+                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" alt="${item.t}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+                        <div class="absolute bottom-3 left-3 right-3">
+                            <span class="text-primary font-black text-[9px] uppercase block mb-1">${item.g}</span>
+                            <h4 class="text-xs font-bold truncate text-white uppercase tracking-tight">${item.t}</h4>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
 
-            // Initial load
+            // Iniciar carrusel (Jean: 9 segundos) con bandera de "primera carga"
             changeSlide(0, true);
-
-            // Auto-advance slider
+            
             setInterval(() => {
-                if (!isTransitioning) {
-                    let next = (currentIdx + 1) % heroSlides.length;
-                    changeSlide(next);
-                }
+                let next = (currentIdx + 1) % heroSlides.length;
+                changeSlide(next);
             }, 9000);
 
             lucide.createIcons();
             
-            // Nav scroll effect
             window.addEventListener('scroll', () => {
                 const nav = document.getElementById('main-nav');
-                const scrolled = window.scrollY > 100;
-                nav.style.background = scrolled ? 'rgba(5,5,5,0.85)' : 'transparent';
-                nav.style.backdropFilter = scrolled ? 'blur(20px)' : 'none';
-                nav.style.paddingBlock = scrolled ? '1.2rem' : '1.5rem';
-                nav.style.borderBottom = scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none';
-            }, { passive: true });
-
-            // AUTO OPEN MODAL ON ENTRY
-            setTimeout(() => {
-                openModal();
-            }, 1500); // Un pequeño retraso para que el usuario vea primero la fluidez del hero
+                nav.style.background = window.scrollY > 50 ? 'rgba(5,5,5,0.95)' : 'transparent';
+                nav.style.paddingBlock = window.scrollY > 50 ? '0.75rem' : '1rem';
+            });
         }
 
         window.onload = init;
