@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KuroStream | Local Performance</title>
+    <title>KuroStream | High Performance</title>
     
-    <!-- Configuración de Favicons -->
-    <link rel="icon" type="image/webp" sizes="16x16" href="./images/favicon16.webp">
-    <link rel="icon" type="image/webp" sizes="32x32" href="./images/favicon32.webp">
-    <link rel="apple-touch-icon" href="./images/favicon32.webp">
+    <!-- Favicon dinámico usando el SVG del Logo -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20 20L80 50L20 80V55L45 50L20 45V20Z' fill='%23FF003C'/></svg>">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +23,21 @@
             --glitter: url("https://assets.codepen.io/13471/silver-glitter-background.png");
         }
         
+        /* Barra de desplazamiento personalizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--primary), #ffffff);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #990024, #cccccc);
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg-deep);
@@ -41,15 +54,31 @@
 
         /* Navbar */
         #main-nav {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent !important; /* Mantenemos transparencia siempre */
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+            will-change: transform;
         }
 
-        .nav-hidden {
-            transform: translateY(-110%);
+        .nav-scrolled {
+            background: rgba(5, 5, 5, 0.8) !important;
+            backdrop-filter: blur(10px);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* EFECTO FUEGO (Base Técnica) */
+        .nav-hidden { transform: translateY(-110%); }
+
+        /* LOGO STYLE */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .logo-container:hover { opacity: 0.8; }
+
+        /* EFECTO FUEGO */
         .fire-effect::after {
             content: "";
             position: absolute;
@@ -72,28 +101,45 @@
             100% { background-position: center -100px, center -150px, 50% 100%; }
         }
 
-        /* Solo botón acceder en PC */
-        .btn-acc:hover {
-            transform: scale(1.1);
-        }
-        .btn-acc:hover::after {
-            opacity: 1;
-        }
-        .btn-acc::after {
-            bottom: -8px;
-            top: auto;
-            height: 20px;
+        /* LOADER OPTIMIZADO */
+        .loader-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-deep);
+            z-index: 60;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
-        /* Menú móvil solo parte inferior */
-        .mobile-nav.fire-active::after {
-            opacity: 1;
+        .kinetic-loader {
+            width: 50px;
+            height: 50px;
+            position: relative;
         }
-        .mobile-nav::after {
-            top: auto;
-            bottom: 0;
-            height: 15px;
-            border-radius: 0 0 24px 24px;
+
+        .kinetic-loader::before,
+        .kinetic-loader::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: kineticSpin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .kinetic-loader::after {
+            border-top-color: white;
+            animation-delay: -0.4s;
+        }
+
+        @keyframes kineticSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
         }
 
         .hero-mask {
@@ -107,73 +153,63 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), filter 1.5s ease;
+            transition: opacity 1.2s ease-in-out;
             filter: brightness(0.6);
+            will-change: opacity;
         }
 
         .img-active { opacity: 1; z-index: 5; }
         .img-next { opacity: 0; z-index: 4; }
 
         .hero-text-anim {
-            animation: heroSlideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: heroSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes heroSlideIn {
-            0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
             100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
         .hero-text-exit {
-            animation: heroSlideOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+            animation: heroSlideOut 0.5s ease-in forwards;
         }
 
         @keyframes heroSlideOut {
             0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); filter: blur(10px); }
+            100% { opacity: 0; transform: translateY(-15px); filter: blur(5px); }
         }
 
+        .float-animation { animation: float 4s ease-in-out infinite; }
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-4px); }
         }
 
-        .float-animation {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .btn-floor-shadow {
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-        }
-
-        .btn-floor-shadow:hover {
-            transform: translateY(-2px) scale(1.02);
-            filter: drop-shadow(0 15px 10px rgba(255, 0, 60, 0.3));
-        }
-
         .anime-card {
             background: var(--card-bg);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s, transform 0.6s;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .anime-card.in-view {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .anime-card:hover {
             transform: translateY(-8px) scale(1.02);
             border-color: var(--primary);
-            box-shadow: 0 20px 40px -15px var(--primary-glow);
+            box-shadow: 0 15px 30px -10px var(--primary-glow);
         }
 
         .reveal-init {
             opacity: 0;
-            transition: opacity 1.5s ease-out;
+            transition: opacity 1s ease-out;
         }
 
-        .revealed {
-            opacity: 1 !important;
-        }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        .revealed { opacity: 1 !important; }
 
         .mobile-nav {
             position: fixed;
@@ -181,209 +217,179 @@
             left: 50%;
             transform: translateX(-50%);
             background: rgba(13, 13, 15, 0.85);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            padding: 8px;
+            padding: 6px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             z-index: 200;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             display: none;
-            overflow: hidden;
         }
 
         @media (pointer: coarse), (max-width: 1024px) {
             .mobile-nav { display: flex; }
-            #indicators { display: none; }
-        }
-
-        @media (pointer: fine) and (min-width: 1025px) {
-            .mobile-nav { display: none !important; }
         }
 
         .mobile-nav-item {
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 18px;
             color: #888;
-            transition: all 0.3s ease;
         }
-
         .mobile-nav-item.active { color: white; }
 
         .mobile-nav-search {
             background: var(--primary);
             color: white;
-            padding: 14px;
+            padding: 12px;
             border-radius: 18px;
-            box-shadow: 0 8px 15px var(--primary-glow);
-        }
-
-        @media (min-width: 1920px) and (pointer: coarse) {
-            .mobile-nav { transform: translateX(-50%) scale(1.2); bottom: 40px; }
         }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-[100] px-6 py-2 flex justify-between items-center" id="main-nav">
-        <div class="flex items-center h-full">
-            <img src="./images/logo.webp" alt="Logo" class="h-24 md:h-32 w-auto object-contain transition-all duration-300">
+    <nav class="fixed top-0 w-full z-[100] px-6 py-6 flex justify-between items-center" id="main-nav">
+        <!-- Logo -->
+        <div class="logo-container">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 20L80 50L20 80V55L45 50L20 45V20Z" fill="url(#logo-grad)" filter="url(#glow)"/>
+                <defs>
+                    <linearGradient id="logo-grad" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#FF003C"/>
+                        <stop offset="1" stop-color="#990024"/>
+                    </linearGradient>
+                    <filter id="glow" x="0" y="0" width="120" height="120" filterUnits="userSpaceOnUse">
+                        <feGaussianBlur stdDeviation="3" result="blur"/>
+                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                    </filter>
+                </defs>
+            </svg>
+            <h1 class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></h1>
         </div>
 
-        <div class="flex items-center">
-            <!-- Botón Acceder -->
-            <button class="fire-effect btn-acc bg-white text-black font-black text-[10px] md:text-[12px] uppercase px-8 py-2.5 rounded-full transition-all duration-300 whitespace-nowrap shadow-xl relative overflow-visible">
-                Acceder
-            </button>
-        </div>
+        <button class="fire-effect bg-white text-black font-black text-[10px] md:text-[12px] uppercase px-8 py-2.5 rounded-full transition-all duration-300 hover:scale-110 shadow-xl relative overflow-visible">
+            Acceder
+        </button>
     </nav>
 
-    <!-- Menú Móvil con efecto de fuego inferior -->
+    <!-- Menú Móvil -->
     <div class="mobile-nav fire-effect" id="mobile-menu">
-        <a href="#" class="mobile-nav-item active">
-            <i data-lucide="home" class="w-6 h-6"></i>
-        </a>
-        <a href="#" class="mobile-nav-item">
-            <i data-lucide="compass" class="w-6 h-6"></i>
-        </a>
-        <a href="#" class="mobile-nav-search">
-            <i data-lucide="search" class="w-6 h-6"></i>
-        </a>
-        <a href="#" class="mobile-nav-item">
-            <i data-lucide="bookmark" class="w-6 h-6"></i>
-        </a>
-        <a href="#" class="mobile-nav-item">
-            <i data-lucide="user" class="w-6 h-6"></i>
-        </a>
+        <a href="#" class="mobile-nav-item active"><i data-lucide="home" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="compass" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="bookmark" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="user" class="w-5 h-5"></i></a>
     </div>
 
     <main>
-        <section class="relative h-[95vh] w-full flex items-center overflow-hidden bg-black">
+        <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
+            <!-- Loader -->
+            <div id="hero-loader" class="loader-container">
+                <div class="kinetic-loader"></div>
+            </div>
+
             <div class="absolute inset-0" id="hero-bg-container">
-                <img id="img-layer-1" src="" class="hero-img-layer img-active object-cover" alt="Hero Layer 1">
-                <img id="img-layer-2" src="" class="hero-img-layer img-next object-cover" alt="Hero Layer 2">
+                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="" decoding="async">
+                <img id="img-layer-2" src="" class="hero-img-layer img-next" alt="" decoding="async">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
 
             <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20 pt-20">
                 <div id="hero-content-wrapper" class="max-w-2xl space-y-6 reveal-init">
                     <div class="flex items-center gap-3">
-                        <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20"></span>
-                        <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em]"></span>
+                        <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter"></span>
+                        <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]"></span>
                     </div>
-                    <h2 id="hero-title" class="text-7xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter"></h2>
-                    <p id="hero-desc" class="text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
+                    <h2 id="hero-title" class="text-6xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter"></h2>
+                    <p id="hero-desc" class="text-base md:text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
-                        <button class="float-animation btn-floor-shadow crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3">
+                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110 transition-all">
                             <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
                         </button>
                     </div>
                 </div>
             </div>
-
-            <div class="absolute bottom-12 left-0 right-0 flex justify-center items-end gap-3 z-30 lg:flex hidden" id="indicators"></div>
         </section>
 
-        <div class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
-            <div class="flex flex-col items-center mb-16">
-                <h3 class="text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
-                <div class="w-24 h-1 bg-primary mt-4 rounded-full shadow-[0_0_15px_var(--primary-glow)]"></div>
+        <!-- Grid de Anime -->
+        <div id="library-section" class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
+            <div class="flex flex-col items-center mb-12">
+                <h3 class="text-4xl md:text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
+                <div class="w-16 h-1 bg-primary mt-3 rounded-full"></div>
             </div>
-            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8"></div>
+            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8"></div>
         </div>
     </main>
 
     <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js"></script>
     <script>
         const heroSlides = [
-            {
-                title: "SOLO <span class='text-primary'>LEVELING</span>",
-                desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto en un mundo de cazadores y mazmorras letales.",
-                tag: "Tendencia",
-                info: "S1 • Acción / Fantasía",
-                img: "./images/imagen1.webp"
-            },
-            {
-                title: "ONE <span class='text-primary'>PIECE</span>",
-                desc: "La era de la piratería no termina. Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.",
-                tag: "Legendario",
-                info: "Ep 1115 • Aventura",
-                img: "./images/imagen2.webp"
-            },
-            {
-                title: "FRIEREN <span class='text-primary'>BEYOND</span>",
-                desc: "Tras derrotar al Rey Demonio, la elfa Frieren comienza un nuevo viaje para entender la brevedad de la vida humana.",
-                tag: "Aclamado",
-                info: "S1 • Viaje / Magia",
-                img: "./images/imagen3.webp"
-            },
-            {
-                title: "DEMON <span class='text-primary'>SLAYER</span>",
-                desc: "La respiración del sol vuelve. Tanjiro y los pilares se preparan para el asalto final al Castillo Infinito.",
-                tag: "Épico",
-                info: "Nueva Temporada • Shonen",
-                img: "./images/imagen4.webp"
-            },
-            {
-                title: "JUJUTSU <span class='text-primary'>KAISEN</span>",
-                desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino mientras las maldiciones toman el control.",
-                tag: "Popular",
-                info: "S2 • Sobrenatural",
-                img: "./images/imagen5.webp"
-            }
+            { title: "SOLO <span class='text-primary'>LEVELING</span>", desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto.", tag: "Tendencia", info: "S1 • Acción / Fantasía", img: "./images/imagen1.webp" },
+            { title: "ONE <span class='text-primary'>PIECE</span>", desc: "Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.", tag: "Legendario", info: "Ep 1115 • Aventura", img: "./images/imagen2.webp" },
+            { title: "FRIEREN <span class='text-primary'>BEYOND</span>", desc: "Tras derrotar al Rey Demonio, la elfa Frieren comienza un nuevo viaje.", tag: "Aclamado", info: "S1 • Viaje / Magia", img: "./images/imagen3.webp" },
+            { title: "DEMON <span class='text-primary'>SLAYER</span>", desc: "La respiración del sol vuelve. Tanjiro se prepara para el Castillo Infinito.", tag: "Épico", info: "Nueva Temp • Shonen", img: "./images/imagen4.webp" },
+            { title: "JUJUTSU <span class='text-primary'>KAISEN</span>", desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino.", tag: "Popular", info: "S2 • Sobrenatural", img: "./images/imagen5.webp" }
         ];
 
         const catalog = [
-            { t: "Kaiju No. 8", s: "9.2", g: "Acción", i: "https://images.unsplash.com/photo-1607604276443-cda2c9309174?q=80&w=400" },
-            { t: "Tokyo Revengers", s: "8.7", g: "Drama", i: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=400" },
-            { t: "Mushoku Tensei", s: "9.5", g: "Isekai", i: "https://images.unsplash.com/photo-1635273051937-2007469062cc?q=80&w=400" },
-            { t: "Naruto", s: "9.5", g: "Ninja", i: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=400" },
-            { t: "Bleach TYBW", s: "9.9", g: "Espadas", i: "https://images.unsplash.com/photo-1560972550-aba3456b5564?q=80&w=400" },
-            { t: "Blue Lock", s: "9.0", g: "Deportes", i: "https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=400" }
+            { t: "Kaiju No. 8", g: "Acción", i: "./images/anime1.webp" },
+            { t: "Tokyo Revengers", g: "Drama", i: "./images/anime2.webp" },
+            { t: "Mushoku Tensei", g: "Isekai", i: "./images/anime3.webp" },
+            { t: "Naruto", g: "Ninja", i: "./images/anime4.webp" },
+            { t: "Bleach TYBW", g: "Espadas", i: "./images/anime5.webp" },
+            { t: "Blue Lock", g: "Deportes", i: "./images/anime6.webp" },
+            { t: "Chainsaw Man", g: "Acción", i: "./images/anime7.webp" },
+            { t: "Spy x Family", g: "Comedia", i: "./images/anime8.webp" },
+            { t: "Oshi No Ko", g: "Drama", i: "./images/anime9.webp" },
+            { t: "Haikyuu!!", g: "Deportes", i: "./images/anime10.webp" },
+            { t: "Black Clover", g: "Magia", i: "./images/anime11.webp" },
+            { t: "Vinland Saga", g: "Seinen", i: "./images/anime12.webp" }
         ];
 
         let currentIdx = 0;
         let activeLayer = 1;
+        let isTransitioning = false;
         const heroWrapper = document.getElementById('hero-content-wrapper');
+        const loader = document.getElementById('hero-loader');
+
+        function preloadImage(url) {
+            const img = new Image();
+            img.src = url;
+        }
 
         function changeSlide(index, isFirstLoad = false) {
-            if (!isFirstLoad && index === currentIdx) return;
-
+            if (isTransitioning || (!isFirstLoad && index === currentIdx)) return;
+            isTransitioning = true;
+            
             const nextSlide = heroSlides[index];
             const layer1 = document.getElementById('img-layer-1');
             const layer2 = document.getElementById('img-layer-2');
-
+            
             if (!isFirstLoad) {
                 heroWrapper.classList.remove('hero-text-anim');
                 heroWrapper.classList.add('hero-text-exit');
             }
 
-            if (activeLayer === 1) {
-                layer2.src = nextSlide.img;
-                layer2.onerror = () => { layer2.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
-                layer2.onload = () => {
-                    layer1.classList.remove('img-active');
-                    layer1.classList.add('img-next');
-                    layer2.classList.remove('img-next');
-                    layer2.classList.add('img-active');
-                    activeLayer = 2;
-                };
-            } else {
-                layer1.src = nextSlide.img;
-                layer1.onerror = () => { layer1.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
-                layer1.onload = () => {
-                    layer2.classList.remove('img-active');
-                    layer2.classList.add('img-next');
-                    layer1.classList.remove('img-next');
-                    layer1.classList.add('img-active');
-                    activeLayer = 1;
-                };
-            }
+            const targetImg = activeLayer === 1 ? layer2 : layer1;
 
-            setTimeout(() => {
+            loader.style.opacity = '1';
+            targetImg.src = nextSlide.img;
+            
+            targetImg.onload = () => {
+                loader.style.opacity = '0';
+                
+                if (activeLayer === 1) {
+                    layer1.classList.replace('img-active', 'img-next');
+                    layer2.classList.replace('img-next', 'img-active');
+                    activeLayer = 2;
+                } else {
+                    layer2.classList.replace('img-active', 'img-next');
+                    layer1.classList.replace('img-next', 'img-active');
+                    activeLayer = 1;
+                }
+
                 currentIdx = index;
                 document.getElementById('hero-title').innerHTML = nextSlide.title;
                 document.getElementById('hero-desc').textContent = nextSlide.desc;
@@ -392,89 +398,70 @@
                 
                 heroWrapper.classList.remove('hero-text-exit');
                 if (isFirstLoad) heroWrapper.classList.add('revealed');
-                
                 void heroWrapper.offsetWidth; 
                 heroWrapper.classList.add('hero-text-anim');
-                updateIndicators();
-            }, isFirstLoad ? 0 : 800);
-        }
+                
+                isTransitioning = false;
+                preloadImage(heroSlides[(index + 1) % heroSlides.length].img);
+            };
 
-        function updateIndicators() {
-            const container = document.getElementById('indicators');
-            if (!container) return;
-            container.innerHTML = '';
-            heroSlides.forEach((_, i) => {
-                const bar = document.createElement('div');
-                bar.className = `h-1 transition-all duration-1000 rounded-full cursor-pointer ${i === currentIdx ? 'w-20 bg-primary shadow-[0_0_20px_var(--primary-glow)]' : 'w-6 bg-white/20 hover:bg-white/40'}`;
-                bar.onclick = () => changeSlide(i);
-                container.appendChild(bar);
-            });
+            targetImg.onerror = () => {
+                loader.style.opacity = '0';
+                isTransitioning = false;
+            };
         }
 
         function init() {
             const grid = document.getElementById('anime-grid');
-            catalog.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "anime-card rounded-xl overflow-hidden group cursor-pointer";
-                card.innerHTML = `
-                    <div class="relative aspect-[2/3] overflow-hidden">
-                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" alt="${item.t}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+            grid.innerHTML = catalog.map(item => `
+                <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
+                    <div class="relative aspect-[2/3] overflow-hidden bg-neutral-900">
+                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-3 left-3 right-3">
-                            <span class="text-primary font-black text-[9px] uppercase block mb-1">${item.g}</span>
-                            <h4 class="text-xs font-bold truncate text-white uppercase tracking-tight">${item.t}</h4>
+                            <span class="text-primary font-black text-[8px] uppercase block mb-0.5">${item.g}</span>
+                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.t}</h4>
                         </div>
                     </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            const img1 = document.getElementById('img-layer-1');
-            img1.src = heroSlides[0].img;
-            img1.onerror = () => { img1.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
-            img1.onload = () => changeSlide(0, true);
+                </div>
+            `).join('');
             
-            setInterval(() => {
-                let next = (currentIdx + 1) % heroSlides.length;
-                changeSlide(next);
-            }, 10000);
+            // Animación al hacer scroll
+            const observerOptions = { threshold: 0.1 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Delay escalonado para las cartas
+                        setTimeout(() => {
+                            entry.target.classList.add('in-view');
+                        }, index * 50); 
+                    }
+                });
+            }, observerOptions);
 
+            document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
+
+            changeSlide(0, true);
+            setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 7000);
             lucide.createIcons();
             
             let lastScrollY = window.scrollY;
             const nav = document.getElementById('main-nav');
-            const mobileMenu = document.getElementById('mobile-menu');
-            let fireTimer;
-
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
-                
-                // Mostrar/Ocultar Menú superior (Smooth Animation)
-                if (currentScrollY > 100) {
-                    if (currentScrollY > lastScrollY) {
-                        // Deslizando hacia abajo: Ocultar
-                        nav.classList.add('nav-hidden');
-                    } else {
-                        // Deslizando hacia arriba: Mostrar
-                        nav.classList.remove('nav-hidden');
-                    }
+                if(currentScrollY > 50) {
+                    nav.classList.add('nav-scrolled');
+                } else {
+                    nav.classList.remove('nav-scrolled');
+                }
+                if (currentScrollY > 80) {
+                    nav.classList.toggle('nav-hidden', currentScrollY > lastScrollY);
                 } else {
                     nav.classList.remove('nav-hidden');
                 }
-
-                // Lógica de fuego momentánea para el menú móvil al deslizar
-                if (Math.abs(currentScrollY - lastScrollY) > 5) {
-                    mobileMenu.classList.add('fire-active');
-                    clearTimeout(fireTimer);
-                    fireTimer = setTimeout(() => {
-                        mobileMenu.classList.remove('fire-active');
-                    }, 2000);
-                }
-
                 lastScrollY = currentScrollY;
-            });
+            }, { passive: true });
         }
-
         window.onload = init;
     </script>
 </body>
