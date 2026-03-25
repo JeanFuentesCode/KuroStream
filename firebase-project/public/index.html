@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KuroStream | Local Performance</title>
     
+    <!-- Configuración de Favicons -->
+    <link rel="icon" type="image/webp" sizes="16x16" href="./images/favicon16.webp">
+    <link rel="icon" type="image/webp" sizes="32x32" href="./images/favicon32.webp">
+    <link rel="apple-touch-icon" href="./images/favicon32.webp">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -17,6 +22,7 @@
             --primary-glow: rgba(255, 0, 60, 0.4);
             --bg-deep: #050505;
             --card-bg: #0d0d0f;
+            --glitter: url("https://assets.codepen.io/13471/silver-glitter-background.png");
         }
         
         body {
@@ -33,39 +39,116 @@
             background: linear-gradient(135deg, #ff003c 0%, #990024 100%);
         }
 
+        /* Navbar */
+        #main-nav {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important; /* Mantenemos transparencia siempre */
+        }
+
+        .nav-hidden {
+            transform: translateY(-110%);
+        }
+
+        /* EFECTO FUEGO (Base Técnica) */
+        .fire-effect::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: var(--glitter), var(--glitter),
+                linear-gradient(0deg, white 0px, #ff8951 2px, rgba(220, 188, 22, 0.4) 10%, transparent 100%);
+            background-size: 150px 100px, 200px 150px, 100% 100%;
+            background-blend-mode: hard-light, color-dodge;
+            mix-blend-mode: color-dodge;
+            filter: brightness(2.5) blur(4px) contrast(4);
+            animation: fireMove 1.5s linear infinite;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        @keyframes fireMove {
+            0% { background-position: center 0px, center 0px, 50% 100%; }
+            100% { background-position: center -100px, center -150px, 50% 100%; }
+        }
+
+        /* Solo botón acceder en PC */
+        .btn-acc:hover {
+            transform: scale(1.1);
+        }
+        .btn-acc:hover::after {
+            opacity: 1;
+        }
+        .btn-acc::after {
+            bottom: -8px;
+            top: auto;
+            height: 20px;
+        }
+
+        /* Menú móvil solo parte inferior */
+        .mobile-nav.fire-active::after {
+            opacity: 1;
+        }
+        .mobile-nav::after {
+            top: auto;
+            bottom: 0;
+            height: 15px;
+            border-radius: 0 0 24px 24px;
+        }
+
         .hero-mask {
             background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.6) 30%, transparent 100%),
                         linear-gradient(to top, var(--bg-deep) 10%, transparent 50%);
         }
 
-        /* Transición de Imagen Local Ultra Rápida */
-        #hero-img {
-            transition: opacity 0.5s ease-in-out, filter 0.5s ease-in-out;
+        .hero-img-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), filter 1.5s ease;
             filter: brightness(0.6);
         }
 
-        .img-hidden {
-            opacity: 0;
-            filter: brightness(0) blur(10px);
-        }
+        .img-active { opacity: 1; z-index: 5; }
+        .img-next { opacity: 0; z-index: 4; }
 
-        /* Animación de Texto Lateral (Slide) */
         .hero-text-anim {
-            animation: heroSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: heroSlideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes heroSlideIn {
-            0% { opacity: 0; transform: translateX(40px); filter: blur(10px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+            0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
         .hero-text-exit {
-            animation: heroSlideOut 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: heroSlideOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards;
         }
 
         @keyframes heroSlideOut {
-            0% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0; transform: translateX(-40px); filter: blur(10px); }
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); filter: blur(10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .btn-floor-shadow {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .btn-floor-shadow:hover {
+            transform: translateY(-2px) scale(1.02);
+            filter: drop-shadow(0 15px 10px rgba(255, 0, 60, 0.3));
         }
 
         .anime-card {
@@ -80,17 +163,9 @@
             box-shadow: 0 20px 40px -15px var(--primary-glow);
         }
 
-        .glass-panel {
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        /* Clase para ocultar contenido inicialmente */
         .reveal-init {
             opacity: 0;
-            transition: opacity 0.8s ease-out;
+            transition: opacity 1.5s ease-out;
         }
 
         .revealed {
@@ -99,79 +174,125 @@
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .mobile-nav {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(13, 13, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 200;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: none;
+            overflow: hidden;
+        }
+
+        @media (pointer: coarse), (max-width: 1024px) {
+            .mobile-nav { display: flex; }
+            #indicators { display: none; }
+        }
+
+        @media (pointer: fine) and (min-width: 1025px) {
+            .mobile-nav { display: none !important; }
+        }
+
+        .mobile-nav-item {
+            padding: 12px 16px;
+            border-radius: 18px;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-item.active { color: white; }
+
+        .mobile-nav-search {
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border-radius: 18px;
+            box-shadow: 0 8px 15px var(--primary-glow);
+        }
+
+        @media (min-width: 1920px) and (pointer: coarse) {
+            .mobile-nav { transform: translateX(-50%) scale(1.2); bottom: 40px; }
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Navegación -->
-    <nav class="fixed top-0 w-full z-[100] px-6 py-4 flex justify-between items-center transition-all duration-500" id="main-nav">
-        <div class="flex items-center gap-10">
-            <div class="flex items-center gap-2 cursor-pointer">
-                <div class="w-10 h-10 crimson-gradient rounded-full flex items-center justify-center shadow-[0_0_20px_var(--primary-glow)]">
-                    <i data-lucide="zap" class="text-white fill-current w-5 h-5"></i>
-                </div>
-                <h1 class="text-2xl font-bebas tracking-wider uppercase">Kuro<span class="text-primary">Stream</span></h1>
-            </div>
-            <div class="hidden lg:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                <a href="#" class="hover:text-white transition-colors">Catálogo</a>
-                <a href="#" class="hover:text-white transition-colors">Simulcasts</a>
-                <a href="#" class="hover:text-white transition-colors">Comunidad</a>
-            </div>
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-[100] px-6 py-2 flex justify-between items-center" id="main-nav">
+        <div class="flex items-center h-full">
+            <img src="./images/logo.webp" alt="Logo" class="h-24 md:h-32 w-auto object-contain transition-all duration-300">
         </div>
 
-        <div class="flex items-center gap-4">
-            <button class="bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-all">
+        <div class="flex items-center">
+            <!-- Botón Acceder -->
+            <button class="fire-effect btn-acc bg-white text-black font-black text-[10px] md:text-[12px] uppercase px-8 py-2.5 rounded-full transition-all duration-300 whitespace-nowrap shadow-xl relative overflow-visible">
                 Acceder
             </button>
         </div>
     </nav>
 
+    <!-- Menú Móvil con efecto de fuego inferior -->
+    <div class="mobile-nav fire-effect" id="mobile-menu">
+        <a href="#" class="mobile-nav-item active">
+            <i data-lucide="home" class="w-6 h-6"></i>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i data-lucide="compass" class="w-6 h-6"></i>
+        </a>
+        <a href="#" class="mobile-nav-search">
+            <i data-lucide="search" class="w-6 h-6"></i>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i data-lucide="bookmark" class="w-6 h-6"></i>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i data-lucide="user" class="w-6 h-6"></i>
+        </a>
+    </div>
+
     <main>
-        <!-- Hero Section -->
         <section class="relative h-[95vh] w-full flex items-center overflow-hidden bg-black">
-            <div class="absolute inset-0">
-                <!-- Imagen de fondo principal (LOCAL) -->
-                <img id="hero-img" src="" class="w-full h-full object-cover img-hidden" alt="Hero">
+            <div class="absolute inset-0" id="hero-bg-container">
+                <img id="img-layer-1" src="" class="hero-img-layer img-active object-cover" alt="Hero Layer 1">
+                <img id="img-layer-2" src="" class="hero-img-layer img-next object-cover" alt="Hero Layer 2">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
 
-            <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20">
-                <!-- Jean: He añadido reveal-init para que empiece invisible -->
+            <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20 pt-20">
                 <div id="hero-content-wrapper" class="max-w-2xl space-y-6 reveal-init">
                     <div class="flex items-center gap-3">
                         <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20"></span>
                         <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em]"></span>
                     </div>
-                    <h2 id="hero-title" class="text-7xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter">
-                        <!-- Título dinámico -->
-                    </h2>
-                    <p id="hero-desc" class="text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5">
-                        <!-- Descripción dinámica -->
-                    </p>
+                    <h2 id="hero-title" class="text-7xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter"></h2>
+                    <p id="hero-desc" class="text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
-                        <button class="crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-transform shadow-2xl shadow-primary/30">
+                        <button class="float-animation btn-floor-shadow crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3">
                             <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
-                        </button>
-                        <button class="glass-panel text-white p-4 rounded-full hover:bg-white/10 transition-all">
-                            <i data-lucide="plus" class="w-5 h-5"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Indicadores -->
-            <div class="absolute bottom-12 left-6 flex items-end gap-3 z-30" id="indicators"></div>
+            <div class="absolute bottom-12 left-0 right-0 flex justify-center items-end gap-3 z-30 lg:flex hidden" id="indicators"></div>
         </section>
 
-        <!-- Cartelera -->
-        <div class="max-w-[1440px] mx-auto px-6 -mt-32 relative z-40 pb-32">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <h3 class="text-4xl font-bebas tracking-tighter italic">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Local Cache Enabled</p>
-                </div>
+        <div class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
+            <div class="flex flex-col items-center mb-16">
+                <h3 class="text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
+                <div class="w-24 h-1 bg-primary mt-4 rounded-full shadow-[0_0_15px_var(--primary-glow)]"></div>
             </div>
-            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8"></div>
         </div>
     </main>
 
@@ -183,35 +304,35 @@
                 desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto en un mundo de cazadores y mazmorras letales.",
                 tag: "Tendencia",
                 info: "S1 • Acción / Fantasía",
-                img: "imagen1.webp"
+                img: "./images/imagen1.webp"
             },
             {
                 title: "ONE <span class='text-primary'>PIECE</span>",
                 desc: "La era de la piratería no termina. Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.",
                 tag: "Legendario",
                 info: "Ep 1115 • Aventura",
-                img: "imagen2.webp"
+                img: "./images/imagen2.webp"
             },
             {
                 title: "FRIEREN <span class='text-primary'>BEYOND</span>",
                 desc: "Tras derrotar al Rey Demonio, la elfa Frieren comienza un nuevo viaje para entender la brevedad de la vida humana.",
                 tag: "Aclamado",
                 info: "S1 • Viaje / Magia",
-                img: "imagen3.webp"
+                img: "./images/imagen3.webp"
             },
             {
                 title: "DEMON <span class='text-primary'>SLAYER</span>",
                 desc: "La respiración del sol vuelve. Tanjiro y los pilares se preparan para el asalto final al Castillo Infinito.",
                 tag: "Épico",
                 info: "Nueva Temporada • Shonen",
-                img: "imagen4.webp"
+                img: "./images/imagen4.webp"
             },
             {
                 title: "JUJUTSU <span class='text-primary'>KAISEN</span>",
                 desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino mientras las maldiciones toman el control.",
                 tag: "Popular",
                 info: "S2 • Sobrenatural",
-                img: "imagen5.webp"
+                img: "./images/imagen5.webp"
             }
         ];
 
@@ -225,56 +346,72 @@
         ];
 
         let currentIdx = 0;
-        const heroImg = document.getElementById('hero-img');
+        let activeLayer = 1;
         const heroWrapper = document.getElementById('hero-content-wrapper');
 
         function changeSlide(index, isFirstLoad = false) {
-            // Salida de texto y fundido de imagen (solo si no es la primera carga)
+            if (!isFirstLoad && index === currentIdx) return;
+
+            const nextSlide = heroSlides[index];
+            const layer1 = document.getElementById('img-layer-1');
+            const layer2 = document.getElementById('img-layer-2');
+
             if (!isFirstLoad) {
                 heroWrapper.classList.remove('hero-text-anim');
                 heroWrapper.classList.add('hero-text-exit');
-                heroImg.classList.add('img-hidden');
+            }
+
+            if (activeLayer === 1) {
+                layer2.src = nextSlide.img;
+                layer2.onerror = () => { layer2.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
+                layer2.onload = () => {
+                    layer1.classList.remove('img-active');
+                    layer1.classList.add('img-next');
+                    layer2.classList.remove('img-next');
+                    layer2.classList.add('img-active');
+                    activeLayer = 2;
+                };
+            } else {
+                layer1.src = nextSlide.img;
+                layer1.onerror = () => { layer1.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
+                layer1.onload = () => {
+                    layer2.classList.remove('img-active');
+                    layer2.classList.add('img-next');
+                    layer1.classList.remove('img-next');
+                    layer1.classList.add('img-active');
+                    activeLayer = 1;
+                };
             }
 
             setTimeout(() => {
                 currentIdx = index;
-                const slide = heroSlides[currentIdx];
+                document.getElementById('hero-title').innerHTML = nextSlide.title;
+                document.getElementById('hero-desc').textContent = nextSlide.desc;
+                document.getElementById('hero-tag').textContent = nextSlide.tag;
+                document.getElementById('hero-info').textContent = nextSlide.info;
                 
-                // Actualizar contenido
-                heroImg.src = slide.img;
-                document.getElementById('hero-title').innerHTML = slide.title;
-                document.getElementById('hero-desc').textContent = slide.desc;
-                document.getElementById('hero-tag').textContent = slide.tag;
-                document.getElementById('hero-info').textContent = slide.info;
-                
-                // Entrada sincronizada
-                heroImg.classList.remove('img-hidden');
                 heroWrapper.classList.remove('hero-text-exit');
+                if (isFirstLoad) heroWrapper.classList.add('revealed');
                 
-                if (isFirstLoad) {
-                    heroWrapper.classList.add('revealed');
-                }
-                
-                void heroWrapper.offsetWidth; // Force reflow
+                void heroWrapper.offsetWidth; 
                 heroWrapper.classList.add('hero-text-anim');
-                
                 updateIndicators();
-            }, isFirstLoad ? 0 : 500); 
+            }, isFirstLoad ? 0 : 800);
         }
 
         function updateIndicators() {
             const container = document.getElementById('indicators');
+            if (!container) return;
             container.innerHTML = '';
             heroSlides.forEach((_, i) => {
                 const bar = document.createElement('div');
-                bar.className = `h-1 transition-all duration-700 rounded-full cursor-pointer ${i === currentIdx ? 'w-20 bg-primary shadow-[0_0_20px_var(--primary-glow)]' : 'w-6 bg-white/20 hover:bg-white/40'}`;
+                bar.className = `h-1 transition-all duration-1000 rounded-full cursor-pointer ${i === currentIdx ? 'w-20 bg-primary shadow-[0_0_20px_var(--primary-glow)]' : 'w-6 bg-white/20 hover:bg-white/40'}`;
                 bar.onclick = () => changeSlide(i);
                 container.appendChild(bar);
             });
         }
 
         function init() {
-            // Cargar grilla
             const grid = document.getElementById('anime-grid');
             catalog.forEach(item => {
                 const card = document.createElement('div');
@@ -292,20 +429,49 @@
                 grid.appendChild(card);
             });
 
-            // Iniciar carrusel (Jean: 9 segundos) con bandera de "primera carga"
-            changeSlide(0, true);
+            const img1 = document.getElementById('img-layer-1');
+            img1.src = heroSlides[0].img;
+            img1.onerror = () => { img1.src = "https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1200"; };
+            img1.onload = () => changeSlide(0, true);
             
             setInterval(() => {
                 let next = (currentIdx + 1) % heroSlides.length;
                 changeSlide(next);
-            }, 9000);
+            }, 10000);
 
             lucide.createIcons();
             
+            let lastScrollY = window.scrollY;
+            const nav = document.getElementById('main-nav');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let fireTimer;
+
             window.addEventListener('scroll', () => {
-                const nav = document.getElementById('main-nav');
-                nav.style.background = window.scrollY > 50 ? 'rgba(5,5,5,0.95)' : 'transparent';
-                nav.style.paddingBlock = window.scrollY > 50 ? '0.75rem' : '1rem';
+                const currentScrollY = window.scrollY;
+                
+                // Mostrar/Ocultar Menú superior (Smooth Animation)
+                if (currentScrollY > 100) {
+                    if (currentScrollY > lastScrollY) {
+                        // Deslizando hacia abajo: Ocultar
+                        nav.classList.add('nav-hidden');
+                    } else {
+                        // Deslizando hacia arriba: Mostrar
+                        nav.classList.remove('nav-hidden');
+                    }
+                } else {
+                    nav.classList.remove('nav-hidden');
+                }
+
+                // Lógica de fuego momentánea para el menú móvil al deslizar
+                if (Math.abs(currentScrollY - lastScrollY) > 5) {
+                    mobileMenu.classList.add('fire-active');
+                    clearTimeout(fireTimer);
+                    fireTimer = setTimeout(() => {
+                        mobileMenu.classList.remove('fire-active');
+                    }, 2000);
+                }
+
+                lastScrollY = currentScrollY;
             });
         }
 
