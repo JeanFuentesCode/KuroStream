@@ -154,7 +154,7 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 1.2s ease-in-out;
-            filter: brightness(0.6);
+            filter: brightness(0.8); /* Brillo aumentado de 0.6 a 0.8 */
             will-change: opacity;
         }
 
@@ -302,7 +302,8 @@
                         <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter"></span>
                         <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]"></span>
                     </div>
-                    <h2 id="hero-title" class="text-6xl md:text-9xl font-bebas leading-[0.85] text-white uppercase italic tracking-tighter"></h2>
+                    <!-- Títulos del carrusel con Space Grotesk Bold -->
+                    <h2 id="hero-title" class="text-6xl md:text-9xl font-bold leading-[0.85] text-white uppercase tracking-tighter" style="font-family: 'Space Grotesk', sans-serif;"></h2>
                     <p id="hero-desc" class="text-base md:text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
                         <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110 transition-all">
@@ -426,12 +427,10 @@
                 </div>
             `).join('');
             
-            // Animación al hacer scroll
             const observerOptions = { threshold: 0.1 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        // Delay escalonado para las cartas
                         setTimeout(() => {
                             entry.target.classList.add('in-view');
                         }, index * 50); 
