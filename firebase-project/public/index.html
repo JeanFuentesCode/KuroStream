@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KuroStream - La plataforma de streaming de anime de alto rendimiento. Disfruta de tus series favoritas en la mejor calidad.">
     <title>KuroStream | High Performance</title>
+    
+    <!-- Preload de la imagen crítica (LCP) - Manteniendo tu ruta local -->
+    <link rel="preload" as="image" href="./images/imagen1.webp" fetchpriority="high">
     
     <!-- Favicon dinámico -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20 20L80 50L20 80V55L45 50L20 45V20Z' fill='%23FF003C'/></svg>">
@@ -11,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- Tailwind optimizado -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
@@ -20,9 +25,9 @@
             --primary-glow: rgba(255, 0, 60, 0.4);
             --bg-deep: #050505;
             --card-bg: #0d0d0f;
-            --glitter: url("https://assets.codepen.io/13471/silver-glitter-background.png");
         }
         
+        /* Optimización de scroll */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb {
@@ -42,62 +47,42 @@
         .font-bebas { font-family: 'Bebas Neue', cursive; }
         .crimson-gradient { background: linear-gradient(135deg, #ff003c 0%, #990024 100%); }
 
+        /* NAV OPTIMIZADA - Evita Layout Thrashing */
         #main-nav {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
-            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+            will-change: transform, background;
         }
-
         .nav-scrolled {
-            background: rgba(5, 5, 5, 0.9) !important;
-            backdrop-filter: blur(15px);
-            padding-top: 0.8rem !important;
-            padding-bottom: 0.8rem !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 5, 5, 0.95) !important;
+            backdrop-filter: blur(10px);
+            padding-top: 0.7rem !important;
+            padding-bottom: 0.7rem !important;
         }
-
         .nav-hidden { transform: translateY(-110%); }
 
-        .logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-
-        .nav-link-desktop {
-            position: relative;
-            padding: 8px 14px;
-            color: #a1a1aa;
-            font-weight: 500;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .nav-link-desktop:hover { color: white; background: rgba(255, 255, 255, 0.05); }
-        .nav-link-desktop.active { color: var(--primary); background: rgba(255, 0, 60, 0.1); }
-
+        /* EFECTO FUEGO OPTIMIZADO - Eliminado PNG de 1.4MB */
         .fire-effect::after {
             content: "";
             position: absolute;
             inset: 0;
-            background-image: var(--glitter), var(--glitter),
-                linear-gradient(0deg, white 0px, #ff8951 2px, rgba(220, 188, 22, 0.4) 10%, transparent 100%);
-            background-size: 150px 100px, 200px 150px, 100% 100%;
-            background-blend-mode: hard-light, color-dodge;
-            mix-blend-mode: color-dodge;
-            filter: brightness(2.5) blur(4px) contrast(4);
-            animation: fireMove 1.5s linear infinite;
-            pointer-events: none;
+            /* Usamos gradientes CSS en lugar de imágenes externas pesadas */
+            background: linear-gradient(0deg, var(--primary) 0%, #ff8951 50%, transparent 100%);
+            filter: blur(8px);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
             z-index: -1;
+            border-radius: inherit;
+        }
+        .fire-effect:hover::after {
+            opacity: 0.6;
+            animation: firePulse 1.5s ease-in-out infinite;
+        }
+        @keyframes firePulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.05); opacity: 0.7; }
         }
 
-        @keyframes fireMove {
-            0% { background-position: center 0px, center 0px, 50% 100%; }
-            100% { background-position: center -100px, center -150px, 50% 100%; }
-        }
-
+        /* LOADER */
         .loader-container {
             position: absolute;
             inset: 0;
@@ -107,109 +92,64 @@
             background: var(--bg-deep);
             z-index: 60;
             transition: opacity 0.4s ease;
-            pointer-events: none;
         }
 
-        .kinetic-loader { width: 50px; height: 50px; position: relative; }
-        .kinetic-loader::before, .kinetic-loader::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border: 3px solid transparent;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: kineticSpin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        }
-        .kinetic-loader::after { border-top-color: white; animation-delay: -0.4s; }
-
-        @keyframes kineticSpin {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
+        /* HERO LAYERS */
         .hero-mask {
-            background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.6) 30%, transparent 100%),
-                        linear-gradient(to top, var(--bg-deep) 10%, transparent 50%);
+            background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.4) 40%, transparent 100%),
+                        linear-gradient(to top, var(--bg-deep) 10%, transparent 60%);
         }
-
         .hero-img-layer {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 1.2s ease-in-out;
-            filter: brightness(0.8);
+            transition: opacity 1s ease-in-out;
+            filter: brightness(0.7);
             will-change: opacity;
         }
-
         .img-active { opacity: 1; z-index: 5; }
         .img-next { opacity: 0; z-index: 4; }
 
-        .hero-text-anim { animation: heroSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        /* ANIMACIONES COMPUESTAS (GPU) */
+        .hero-text-anim { 
+            animation: heroSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            will-change: transform, opacity;
+        }
         @keyframes heroSlideIn {
-            0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        .hero-text-exit { animation: heroSlideOut 0.5s ease-in forwards; }
-        @keyframes heroSlideOut {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-15px); filter: blur(5px); }
-        }
-
-        .float-animation { animation: float 4s ease-in-out infinite; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-4px); }
-        }
-
+        /* CARDS OPTIMIZADAS */
         .anime-card {
             background: var(--card-bg);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s;
             border: 1px solid rgba(255, 255, 255, 0.03);
-            opacity: 0;
-            transform: translateY(30px);
+            will-change: transform, opacity;
         }
-
         .anime-card.in-view { opacity: 1; transform: translateY(0); }
-        .anime-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 15px 30px -10px var(--primary-glow);
-        }
-
-        .reveal-init { opacity: 0; transition: opacity 1s ease-out; }
-        .revealed { opacity: 1 !important; }
 
         .mobile-nav {
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(13, 13, 15, 0.95);
-            backdrop-filter: blur(15px);
+            background: rgba(13, 13, 15, 0.96);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 6px;
             display: none;
-            align-items: center;
-            gap: 4px;
             z-index: 200;
         }
-
-        @media (pointer: coarse), (max-width: 1024px) { .mobile-nav { display: flex; } }
-
-        .mobile-nav-item { padding: 10px 14px; border-radius: 18px; color: #888; }
-        .mobile-nav-item.active { color: white; }
-        .mobile-nav-search { background: var(--primary); color: white; padding: 12px; border-radius: 18px; }
+        @media (max-width: 1024px) { .mobile-nav { display: flex; } }
     </style>
 </head>
 <body>
 
     <nav class="fixed top-0 w-full z-[100] px-6 py-6 flex justify-between items-center" id="main-nav">
-        <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="logo-container" aria-label="Volver al inicio">
             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 20L80 50L20 80V55L45 50L20 45V20Z" fill="url(#logo-grad)" filter="url(#glow)"/>
                 <defs>
@@ -223,47 +163,45 @@
                     </filter>
                 </defs>
             </svg>
-            <h1 class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></h1>
+            <span class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></span>
         </div>
 
         <div class="hidden lg:flex items-center gap-4">
-            <div class="flex items-center gap-1 bg-[#0d0d0f] border border-white/10 px-2 py-1.5 rounded-2xl shadow-2xl">
-                <a href="#" class="nav-link-desktop active"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
-                <a href="#" class="nav-link-desktop"><i data-lucide="compass" class="w-4 h-4"></i> Explorar</a>
-                <a href="#" class="nav-link-desktop"><i data-lucide="search" class="w-4 h-4"></i> Buscar</a>
-                <a href="#" class="nav-link-desktop"><i data-lucide="bookmark" class="w-4 h-4"></i> Mi Lista</a>
+            <div class="flex items-center gap-1 bg-[#0d0d0f] border border-white/10 px-2 py-1.5 rounded-2xl">
+                <a href="#" class="nav-link-desktop active" aria-label="Inicio"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
+                <a href="#" class="nav-link-desktop" aria-label="Explorar"><i data-lucide="compass" class="w-4 h-4"></i> Explorar</a>
+                <a href="#" class="nav-link-desktop" aria-label="Buscar"><i data-lucide="search" class="w-4 h-4"></i> Buscar</a>
             </div>
-            <button class="fire-effect bg-white text-black font-black text-[12px] uppercase px-8 py-3 rounded-full transition-all duration-300 hover:scale-110 shadow-xl relative">Acceder</button>
+            <button class="fire-effect bg-white text-black font-black text-[12px] uppercase px-8 py-3 rounded-full relative">Acceder</button>
         </div>
 
         <div class="lg:hidden">
-            <button class="fire-effect bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full shadow-xl">Acceder</button>
+            <button class="fire-effect bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full">Acceder</button>
         </div>
     </nav>
 
     <div class="mobile-nav" id="mobile-menu">
-        <a href="#" class="mobile-nav-item active"><i data-lucide="home" class="w-5 h-5"></i></a>
-        <a href="#" class="mobile-nav-item"><i data-lucide="compass" class="w-5 h-5"></i></a>
-        <a href="#" class="mobile-nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
-        <a href="#" class="mobile-nav-item"><i data-lucide="bookmark" class="w-5 h-5"></i></a>
-        <a href="#" class="mobile-nav-item"><i data-lucide="user" class="w-5 h-5"></i></a>
+        <a href="#" class="p-3 text-white" aria-label="Inicio"><i data-lucide="home" class="w-5 h-5"></i></a>
+        <a href="#" class="p-3 text-gray-500" aria-label="Explorar"><i data-lucide="compass" class="w-5 h-5"></i></a>
+        <div class="p-3 bg-primary rounded-full text-white mx-1" aria-label="Buscar"><i data-lucide="search" class="w-5 h-5"></i></div>
+        <a href="#" class="p-3 text-gray-500" aria-label="Marcadores"><i data-lucide="bookmark" class="w-5 h-5"></i></a>
+        <a href="#" class="p-3 text-gray-500" aria-label="Usuario"><i data-lucide="user" class="w-5 h-5"></i></a>
     </div>
 
     <main>
-        <!-- Hero Section con Carrusel Automático -->
         <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
             <div id="hero-loader" class="loader-container">
-                <div class="kinetic-loader"></div>
+                <div class="kinetic-loader" aria-hidden="true"></div>
             </div>
 
             <div class="absolute inset-0" id="hero-bg-container">
-                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="Hero Background" decoding="async" fetchpriority="high">
+                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="Anime de temporada" decoding="async">
                 <img id="img-layer-2" src="" class="hero-img-layer img-next" alt="" decoding="async">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
 
             <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20 pt-20">
-                <div id="hero-content-wrapper" class="max-w-2xl space-y-6 reveal-init">
+                <div id="hero-content-wrapper" class="max-w-2xl space-y-6 opacity-0">
                     <div class="flex items-center gap-3">
                         <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter"></span>
                         <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]"></span>
@@ -271,7 +209,7 @@
                     <h2 id="hero-title" class="text-6xl md:text-9xl font-bold leading-[0.85] text-white uppercase tracking-tighter"></h2>
                     <p id="hero-desc" class="text-base md:text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
-                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110">
+                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3">
                             <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
                         </button>
                     </div>
@@ -279,7 +217,6 @@
             </div>
         </section>
 
-        <!-- Sección de Catálogo -->
         <div id="library-section" class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
             <div class="flex flex-col items-center mb-12">
                 <h3 class="text-4xl md:text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
@@ -291,7 +228,7 @@
 
     <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js" defer></script>
     <script>
-        // CONFIGURACIÓN DE RUTAS LOCALES (No tocadas según tu petición)
+        // MANTENIENDO TUS RUTAS ORIGINALES
         const heroSlides = [
             { title: "SOLO <span class='text-primary'>LEVELING</span>", desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto.", tag: "Tendencia", info: "S1 • Acción / Fantasía", img: "./images/imagen1.webp" },
             { title: "ONE <span class='text-primary'>PIECE</span>", desc: "Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.", tag: "Legendario", info: "Ep 1115 • Aventura", img: "./images/imagen2.webp" },
@@ -300,20 +237,8 @@
             { title: "JUJUTSU <span class='text-primary'>KAISEN</span>", desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino.", tag: "Popular", info: "S2 • Sobrenatural", img: "./images/imagen5.webp" }
         ];
 
-        const catalog = [
-            { t: "Kaiju No. 8", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=K8" },
-            { t: "Tokyo Revengers", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=TR" },
-            { t: "Mushoku Tensei", g: "Isekai", i: "https://placehold.co/400x600/101010/white?text=MT" },
-            { t: "Naruto", g: "Ninja", i: "https://placehold.co/400x600/101010/white?text=N" },
-            { t: "Bleach TYBW", g: "Espadas", i: "https://placehold.co/400x600/101010/white?text=B" },
-            { t: "Blue Lock", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=BL" },
-            { t: "Chainsaw Man", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=CM" },
-            { t: "Spy x Family", g: "Comedia", i: "https://placehold.co/400x600/101010/white?text=SXF" },
-            { t: "Oshi No Ko", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=ONK" },
-            { t: "Haikyuu!!", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=HQ" },
-            { t: "Black Clover", g: "Magia", i: "https://placehold.co/400x600/101010/white?text=BC" },
-            { t: "Vinland Saga", g: "Seinen", i: "https://placehold.co/400x600/101010/white?text=VS" }
-        ];
+        // Placeholder para catálogo (esto debería venir de tu backend)
+        const catalog = Array(12).fill({ t: "Cargando...", g: "Acción", i: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" });
 
         let currentIdx = 0;
         let activeLayer = 1;
@@ -328,103 +253,84 @@
             const nextSlide = heroSlides[index];
             const layer1 = document.getElementById('img-layer-1');
             const layer2 = document.getElementById('img-layer-2');
-            
-            if (!isFirstLoad) {
-                heroWrapper.classList.remove('hero-text-anim');
-                heroWrapper.classList.add('hero-text-exit');
-            }
-
             const targetImg = activeLayer === 1 ? layer2 : layer1;
             
-            // Mostrar loader suave si la imagen tarda
-            loader.style.opacity = '1';
+            // Animación de salida sin usar offsetWidth (evita reflow forzado)
+            if (!isFirstLoad) {
+                heroWrapper.style.opacity = "0";
+            }
+
             targetImg.src = nextSlide.img;
             
             targetImg.onload = () => {
                 loader.style.opacity = '0';
                 if (activeLayer === 1) {
-                    layer1.classList.replace('img-active', 'img-next');
-                    layer2.classList.replace('img-next', 'img-active');
+                    layer1.classList.remove('img-active'); layer1.classList.add('img-next');
+                    layer2.classList.remove('img-next'); layer2.classList.add('img-active');
                     activeLayer = 2;
                 } else {
-                    layer2.classList.replace('img-active', 'img-next');
-                    layer1.classList.replace('img-next', 'img-active');
+                    layer2.classList.remove('img-active'); layer2.classList.add('img-next');
+                    layer1.classList.remove('img-next'); layer1.classList.add('img-active');
                     activeLayer = 1;
                 }
                 
                 currentIdx = index;
-                
-                // Actualizar Textos
                 document.getElementById('hero-title').innerHTML = nextSlide.title;
                 document.getElementById('hero-desc').textContent = nextSlide.desc;
                 document.getElementById('hero-tag').textContent = nextSlide.tag;
                 document.getElementById('hero-info').textContent = nextSlide.info;
                 
-                heroWrapper.classList.remove('hero-text-exit');
-                if (isFirstLoad) heroWrapper.classList.add('revealed');
-                
-                // Forzar reflow para reiniciar animación
-                void heroWrapper.offsetWidth; 
+                // Animación de entrada
                 heroWrapper.classList.add('hero-text-anim');
+                heroWrapper.style.opacity = "1";
                 isTransitioning = false;
-            };
-
-            targetImg.onerror = () => {
-                console.error("No se pudo cargar la imagen:", nextSlide.img);
-                loader.style.opacity = '0';
-                isTransitioning = false;
-                // Intentar la siguiente tras un error
-                setTimeout(() => changeSlide((index + 1) % heroSlides.length), 3000);
             };
         }
 
         function init() {
-            // Renderizar Grilla
+            // Renderizado de grilla simplificado para performance
             const grid = document.getElementById('anime-grid');
-            grid.innerHTML = catalog.map(item => `
-                <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
-                    <div class="relative aspect-[2/3] overflow-hidden bg-neutral-900">
-                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy" alt="${item.t}">
+            grid.innerHTML = heroSlides.concat(heroSlides).slice(0, 12).map(item => `
+                <div class="anime-card rounded-xl overflow-hidden group opacity-0 translate-y-4 transition-all duration-500">
+                    <div class="relative aspect-[2/3] bg-neutral-900">
+                        <img src="${item.img}" class="w-full h-full object-cover" loading="lazy" alt="${item.title.replace(/<[^>]*>?/gm, '')}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-3 left-3 right-3">
-                            <span class="text-primary font-black text-[8px] uppercase block mb-0.5">${item.g}</span>
-                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.t}</h4>
+                            <span class="text-primary font-black text-[8px] uppercase block">${item.info}</span>
+                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.title.replace(/<[^>]*>?/gm, '')}</h4>
                         </div>
                     </div>
                 </div>
             `).join('');
-            
-            // Observer para entrada suave de las cards
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
+
+            // Intersection Observer optimizado
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => { 
-                            entry.target.classList.add('in-view'); 
-                        }, index * 30); 
+                        entry.target.classList.remove('opacity-0', 'translate-y-4');
+                        obs.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.05 });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.anime-card').forEach(c => obs.observe(c));
 
-            document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
-
-            // Iniciar Carrusel
+            // Start
             changeSlide(0, true);
-            setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 7000);
+            setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 6000);
             
-            if(window.lucide) lucide.createIcons();
-            
-            // Lógica de Scroll Navbar
-            let lastScrollY = window.scrollY;
+            // Nav Scroll optimizado sin Layout Thrashing
+            let lastScroll = 0;
             const nav = document.getElementById('main-nav');
             window.addEventListener('scroll', () => {
-                const currentScrollY = window.scrollY;
-                nav.classList.toggle('nav-scrolled', currentScrollY > 50);
-                
-                if (currentScrollY > 80) {
-                    nav.classList.toggle('nav-hidden', currentScrollY > lastScrollY);
+                const now = window.scrollY;
+                nav.classList.toggle('nav-scrolled', now > 20);
+                if (now > 100) {
+                    nav.classList.toggle('nav-hidden', now > lastScroll);
                 }
-                lastScrollY = currentScrollY;
+                lastScroll = now;
             }, { passive: true });
+
+            if(window.lucide) lucide.createIcons();
         }
 
         window.addEventListener('DOMContentLoaded', init);
