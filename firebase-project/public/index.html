@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KuroStream | High Performance</title>
     
-    <!-- Favicon dinámico usando el SVG del Logo -->
+    <!-- Favicon dinámico -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20 20L80 50L20 80V55L45 50L20 45V20Z' fill='%23FF003C'/></svg>">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
     <style>
         :root {
@@ -23,19 +23,11 @@
             --glitter: url("https://assets.codepen.io/13471/silver-glitter-background.png");
         }
         
-        /* Barra de desplazamiento personalizada */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-deep);
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(to bottom, var(--primary), #ffffff);
             border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #990024, #cccccc);
         }
 
         body {
@@ -44,41 +36,46 @@
             color: #ffffff;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            font-display: swap;
         }
 
         .font-bebas { font-family: 'Bebas Neue', cursive; }
+        .crimson-gradient { background: linear-gradient(135deg, #ff003c 0%, #990024 100%); }
 
-        .crimson-gradient {
-            background: linear-gradient(135deg, #ff003c 0%, #990024 100%);
-        }
-
-        /* Navbar */
         #main-nav {
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
             will-change: transform;
         }
 
         .nav-scrolled {
-            background: rgba(5, 5, 5, 0.8) !important;
-            backdrop-filter: blur(10px);
-            padding-top: 1rem !important;
-            padding-bottom: 1rem !important;
+            background: rgba(5, 5, 5, 0.9) !important;
+            backdrop-filter: blur(15px);
+            padding-top: 0.8rem !important;
+            padding-bottom: 0.8rem !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .nav-hidden { transform: translateY(-110%); }
 
-        /* LOGO STYLE */
-        .logo-container {
+        .logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+
+        .nav-link-desktop {
+            position: relative;
+            padding: 8px 14px;
+            color: #a1a1aa;
+            font-weight: 500;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: opacity 0.3s;
+            gap: 6px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .logo-container:hover { opacity: 0.8; }
+        .nav-link-desktop:hover { color: white; background: rgba(255, 255, 255, 0.05); }
+        .nav-link-desktop.active { color: var(--primary); background: rgba(255, 0, 60, 0.1); }
 
-        /* EFECTO FUEGO */
         .fire-effect::after {
             content: "";
             position: absolute;
@@ -101,7 +98,6 @@
             100% { background-position: center -100px, center -150px, 50% 100%; }
         }
 
-        /* LOADER OPTIMIZADO */
         .loader-container {
             position: absolute;
             inset: 0;
@@ -114,14 +110,8 @@
             pointer-events: none;
         }
 
-        .kinetic-loader {
-            width: 50px;
-            height: 50px;
-            position: relative;
-        }
-
-        .kinetic-loader::before,
-        .kinetic-loader::after {
+        .kinetic-loader { width: 50px; height: 50px; position: relative; }
+        .kinetic-loader::before, .kinetic-loader::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -130,11 +120,7 @@
             border-radius: 50%;
             animation: kineticSpin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
-
-        .kinetic-loader::after {
-            border-top-color: white;
-            animation-delay: -0.4s;
-        }
+        .kinetic-loader::after { border-top-color: white; animation-delay: -0.4s; }
 
         @keyframes kineticSpin {
             0% { transform: rotate(0deg) scale(1); }
@@ -154,26 +140,20 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 1.2s ease-in-out;
-            filter: brightness(0.8); /* Brillo aumentado de 0.6 a 0.8 */
+            filter: brightness(0.8);
             will-change: opacity;
         }
 
         .img-active { opacity: 1; z-index: 5; }
         .img-next { opacity: 0; z-index: 4; }
 
-        .hero-text-anim {
-            animation: heroSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
+        .hero-text-anim { animation: heroSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes heroSlideIn {
             0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
             100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        .hero-text-exit {
-            animation: heroSlideOut 0.5s ease-in forwards;
-        }
-
+        .hero-text-exit { animation: heroSlideOut 0.5s ease-in forwards; }
         @keyframes heroSlideOut {
             0% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-15px); filter: blur(5px); }
@@ -187,28 +167,20 @@
 
         .anime-card {
             background: var(--card-bg);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s, transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s;
             border: 1px solid rgba(255, 255, 255, 0.03);
             opacity: 0;
             transform: translateY(30px);
         }
 
-        .anime-card.in-view {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+        .anime-card.in-view { opacity: 1; transform: translateY(0); }
         .anime-card:hover {
             transform: translateY(-8px) scale(1.02);
             border-color: var(--primary);
             box-shadow: 0 15px 30px -10px var(--primary-glow);
         }
 
-        .reveal-init {
-            opacity: 0;
-            transition: opacity 1s ease-out;
-        }
-
+        .reveal-init { opacity: 0; transition: opacity 1s ease-out; }
         .revealed { opacity: 1 !important; }
 
         .mobile-nav {
@@ -216,42 +188,27 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(13, 13, 15, 0.85);
+            background: rgba(13, 13, 15, 0.95);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 6px;
-            display: flex;
+            display: none;
             align-items: center;
             gap: 4px;
             z-index: 200;
-            display: none;
         }
 
-        @media (pointer: coarse), (max-width: 1024px) {
-            .mobile-nav { display: flex; }
-        }
+        @media (pointer: coarse), (max-width: 1024px) { .mobile-nav { display: flex; } }
 
-        .mobile-nav-item {
-            padding: 10px 14px;
-            border-radius: 18px;
-            color: #888;
-        }
+        .mobile-nav-item { padding: 10px 14px; border-radius: 18px; color: #888; }
         .mobile-nav-item.active { color: white; }
-
-        .mobile-nav-search {
-            background: var(--primary);
-            color: white;
-            padding: 12px;
-            border-radius: 18px;
-        }
+        .mobile-nav-search { background: var(--primary); color: white; padding: 12px; border-radius: 18px; }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- Navbar -->
     <nav class="fixed top-0 w-full z-[100] px-6 py-6 flex justify-between items-center" id="main-nav">
-        <!-- Logo -->
         <div class="logo-container">
             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 20L80 50L20 80V55L45 50L20 45V20Z" fill="url(#logo-grad)" filter="url(#glow)"/>
@@ -269,13 +226,22 @@
             <h1 class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></h1>
         </div>
 
-        <button class="fire-effect bg-white text-black font-black text-[10px] md:text-[12px] uppercase px-8 py-2.5 rounded-full transition-all duration-300 hover:scale-110 shadow-xl relative overflow-visible">
-            Acceder
-        </button>
+        <div class="hidden lg:flex items-center gap-4">
+            <div class="flex items-center gap-1 bg-[#0d0d0f] border border-white/10 px-2 py-1.5 rounded-2xl shadow-2xl">
+                <a href="#" class="nav-link-desktop active"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="compass" class="w-4 h-4"></i> Explorar</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="search" class="w-4 h-4"></i> Buscar</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="bookmark" class="w-4 h-4"></i> Mi Lista</a>
+            </div>
+            <button class="fire-effect bg-white text-black font-black text-[12px] uppercase px-8 py-3 rounded-full transition-all duration-300 hover:scale-110 shadow-xl relative">Acceder</button>
+        </div>
+
+        <div class="lg:hidden">
+            <button class="fire-effect bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full shadow-xl">Acceder</button>
+        </div>
     </nav>
 
-    <!-- Menú Móvil -->
-    <div class="mobile-nav fire-effect" id="mobile-menu">
+    <div class="mobile-nav" id="mobile-menu">
         <a href="#" class="mobile-nav-item active"><i data-lucide="home" class="w-5 h-5"></i></a>
         <a href="#" class="mobile-nav-item"><i data-lucide="compass" class="w-5 h-5"></i></a>
         <a href="#" class="mobile-nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
@@ -285,13 +251,12 @@
 
     <main>
         <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
-            <!-- Loader -->
             <div id="hero-loader" class="loader-container">
                 <div class="kinetic-loader"></div>
             </div>
 
             <div class="absolute inset-0" id="hero-bg-container">
-                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="" decoding="async">
+                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="Hero Background" decoding="async" fetchpriority="high">
                 <img id="img-layer-2" src="" class="hero-img-layer img-next" alt="" decoding="async">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
@@ -302,11 +267,10 @@
                         <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter"></span>
                         <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]"></span>
                     </div>
-                    <!-- Títulos del carrusel con Space Grotesk Bold -->
-                    <h2 id="hero-title" class="text-6xl md:text-9xl font-bold leading-[0.85] text-white uppercase tracking-tighter" style="font-family: 'Space Grotesk', sans-serif;"></h2>
+                    <h2 id="hero-title" class="text-6xl md:text-9xl font-bold leading-[0.85] text-white uppercase tracking-tighter"></h2>
                     <p id="hero-desc" class="text-base md:text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
-                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110 transition-all">
+                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110">
                             <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
                         </button>
                     </div>
@@ -314,7 +278,6 @@
             </div>
         </section>
 
-        <!-- Grid de Anime -->
         <div id="library-section" class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
             <div class="flex flex-col items-center mb-12">
                 <h3 class="text-4xl md:text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
@@ -324,7 +287,7 @@
         </div>
     </main>
 
-    <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js" defer></script>
     <script>
         const heroSlides = [
             { title: "SOLO <span class='text-primary'>LEVELING</span>", desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto.", tag: "Tendencia", info: "S1 • Acción / Fantasía", img: "./images/imagen1.webp" },
@@ -335,18 +298,18 @@
         ];
 
         const catalog = [
-            { t: "Kaiju No. 8", g: "Acción", i: "./images/anime1.webp" },
-            { t: "Tokyo Revengers", g: "Drama", i: "./images/anime2.webp" },
-            { t: "Mushoku Tensei", g: "Isekai", i: "./images/anime3.webp" },
-            { t: "Naruto", g: "Ninja", i: "./images/anime4.webp" },
-            { t: "Bleach TYBW", g: "Espadas", i: "./images/anime5.webp" },
-            { t: "Blue Lock", g: "Deportes", i: "./images/anime6.webp" },
-            { t: "Chainsaw Man", g: "Acción", i: "./images/anime7.webp" },
-            { t: "Spy x Family", g: "Comedia", i: "./images/anime8.webp" },
-            { t: "Oshi No Ko", g: "Drama", i: "./images/anime9.webp" },
-            { t: "Haikyuu!!", g: "Deportes", i: "./images/anime10.webp" },
-            { t: "Black Clover", g: "Magia", i: "./images/anime11.webp" },
-            { t: "Vinland Saga", g: "Seinen", i: "./images/anime12.webp" }
+            { t: "Kaiju No. 8", g: "Acción", i: "" },
+            { t: "Tokyo Revengers", g: "Drama", i: "" },
+            { t: "Mushoku Tensei", g: "Isekai", i: "" },
+            { t: "Naruto", g: "Ninja", i: "" },
+            { t: "Bleach TYBW", g: "Espadas", i: "" },
+            { t: "Blue Lock", g: "Deportes", i: "" },
+            { t: "Chainsaw Man", g: "Acción", i: "" },
+            { t: "Spy x Family", g: "Comedia", i: "" },
+            { t: "Oshi No Ko", g: "Drama", i: "" },
+            { t: "Haikyuu!!", g: "Deportes", i: "" },
+            { t: "Black Clover", g: "Magia", i: "" },
+            { t: "Vinland Saga", g: "Seinen", i: "" }
         ];
 
         let currentIdx = 0;
@@ -354,11 +317,6 @@
         let isTransitioning = false;
         const heroWrapper = document.getElementById('hero-content-wrapper');
         const loader = document.getElementById('hero-loader');
-
-        function preloadImage(url) {
-            const img = new Image();
-            img.src = url;
-        }
 
         function changeSlide(index, isFirstLoad = false) {
             if (isTransitioning || (!isFirstLoad && index === currentIdx)) return;
@@ -374,13 +332,11 @@
             }
 
             const targetImg = activeLayer === 1 ? layer2 : layer1;
-
             loader.style.opacity = '1';
             targetImg.src = nextSlide.img;
             
             targetImg.onload = () => {
                 loader.style.opacity = '0';
-                
                 if (activeLayer === 1) {
                     layer1.classList.replace('img-active', 'img-next');
                     layer2.classList.replace('img-next', 'img-active');
@@ -390,26 +346,18 @@
                     layer1.classList.replace('img-next', 'img-active');
                     activeLayer = 1;
                 }
-
                 currentIdx = index;
                 document.getElementById('hero-title').innerHTML = nextSlide.title;
                 document.getElementById('hero-desc').textContent = nextSlide.desc;
                 document.getElementById('hero-tag').textContent = nextSlide.tag;
                 document.getElementById('hero-info').textContent = nextSlide.info;
-                
                 heroWrapper.classList.remove('hero-text-exit');
                 if (isFirstLoad) heroWrapper.classList.add('revealed');
                 void heroWrapper.offsetWidth; 
                 heroWrapper.classList.add('hero-text-anim');
-                
-                isTransitioning = false;
-                preloadImage(heroSlides[(index + 1) % heroSlides.length].img);
-            };
-
-            targetImg.onerror = () => {
-                loader.style.opacity = '0';
                 isTransitioning = false;
             };
+            targetImg.onerror = () => { loader.style.opacity = '0'; isTransitioning = false; };
         }
 
         function init() {
@@ -417,7 +365,7 @@
             grid.innerHTML = catalog.map(item => `
                 <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
                     <div class="relative aspect-[2/3] overflow-hidden bg-neutral-900">
-                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy" alt="${item.t}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-3 left-3 right-3">
                             <span class="text-primary font-black text-[8px] uppercase block mb-0.5">${item.g}</span>
@@ -427,41 +375,31 @@
                 </div>
             `).join('');
             
-            const observerOptions = { threshold: 0.1 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('in-view');
-                        }, index * 50); 
+                        setTimeout(() => { entry.target.classList.add('in-view'); }, index * 30); 
                     }
                 });
-            }, observerOptions);
+            }, { threshold: 0.05 });
 
             document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
-
             changeSlide(0, true);
             setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 7000);
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
             
             let lastScrollY = window.scrollY;
             const nav = document.getElementById('main-nav');
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
-                if(currentScrollY > 50) {
-                    nav.classList.add('nav-scrolled');
-                } else {
-                    nav.classList.remove('nav-scrolled');
-                }
+                nav.classList.toggle('nav-scrolled', currentScrollY > 50);
                 if (currentScrollY > 80) {
                     nav.classList.toggle('nav-hidden', currentScrollY > lastScrollY);
-                } else {
-                    nav.classList.remove('nav-hidden');
                 }
                 lastScrollY = currentScrollY;
             }, { passive: true });
         }
-        window.onload = init;
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
