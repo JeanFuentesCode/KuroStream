@@ -172,22 +172,6 @@
             50% { transform: translateY(-4px); }
         }
 
-        .anime-card {
-            background: var(--card-bg);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s, box-shadow 0.4s;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            opacity: 0;
-            transform: translateY(30px);
-            will-change: transform, opacity;
-        }
-
-        .anime-card.in-view { opacity: 1; transform: translateY(0); }
-        .anime-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 15px 30px -10px var(--primary-glow);
-        }
-
         .reveal-init { opacity: 0; transition: opacity 1s ease-out; }
         .revealed { opacity: 1 !important; }
 
@@ -258,7 +242,7 @@
     </div>
 
     <main>
-        <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
+        <section class="relative h-screen w-full flex items-center overflow-hidden bg-black">
             <div id="hero-loader" class="loader-container">
                 <div class="kinetic-loader"></div>
             </div>
@@ -285,14 +269,6 @@
                 </div>
             </div>
         </section>
-
-        <div id="library-section" class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
-            <div class="flex flex-col items-center mb-12">
-                <h3 class="text-4xl md:text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
-                <div class="w-16 h-1 bg-primary mt-3 rounded-full"></div>
-            </div>
-            <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8"></div>
-        </div>
     </main>
 
     <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js" defer></script>
@@ -303,21 +279,6 @@
             { title: "FRIEREN <span class='text-primary'>BEYOND</span>", desc: "Tras derrotar al Rey Demonio, la elfa Frieren comienza un nuevo viaje.", tag: "Aclamado", info: "S1 • Viaje / Magia", img: "./images/imagen3.webp" },
             { title: "DEMON <span class='text-primary'>SLAYER</span>", desc: "La respiración del sol vuelve. Tanjiro se prepara para el Castillo Infinito.", tag: "Épico", info: "Nueva Temp • Shonen", img: "./images/imagen4.webp" },
             { title: "JUJUTSU <span class='text-primary'>KAISEN</span>", desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino.", tag: "Popular", info: "S2 • Sobrenatural", img: "./images/imagen5.webp" }
-        ];
-
-        const catalog = [
-            { t: "Kaiju No. 8", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=K8" },
-            { t: "Tokyo Revengers", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=TR" },
-            { t: "Mushoku Tensei", g: "Isekai", i: "https://placehold.co/400x600/101010/white?text=MT" },
-            { t: "Naruto", g: "Ninja", i: "https://placehold.co/400x600/101010/white?text=N" },
-            { t: "Bleach TYBW", g: "Espadas", i: "https://placehold.co/400x600/101010/white?text=B" },
-            { t: "Blue Lock", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=BL" },
-            { t: "Chainsaw Man", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=CM" },
-            { t: "Spy x Family", g: "Comedia", i: "https://placehold.co/400x600/101010/white?text=SXF" },
-            { t: "Oshi No Ko", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=ONK" },
-            { t: "Haikyuu!!", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=HQ" },
-            { t: "Black Clover", g: "Magia", i: "https://placehold.co/400x600/101010/white?text=BC" },
-            { t: "Vinland Saga", g: "Seinen", i: "https://placehold.co/400x600/101010/white?text=VS" }
         ];
 
         let currentIdx = 0;
@@ -342,7 +303,6 @@
 
             const targetImg = activeLayer === 1 ? layer2 : layer1;
             
-            // Pre-cargar la imagen antes de cambiar
             const imgPreloader = new Image();
             imgPreloader.src = nextSlide.img;
             
@@ -384,31 +344,6 @@
         }
 
         function init() {
-            const grid = document.getElementById('anime-grid');
-            grid.innerHTML = catalog.map(item => `
-                <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
-                    <div class="relative aspect-[2/3] overflow-hidden bg-neutral-900">
-                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy" alt="${item.t}" decoding="async">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-3 left-3 right-3">
-                            <span class="text-primary font-black text-[8px] uppercase block mb-0.5">${item.g}</span>
-                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.t}</h4>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('in-view'); 
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '50px' });
-
-            document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
-
             changeSlide(0, true);
             slideInterval = setInterval(() => {
                 if (!document.hidden) changeSlide((currentIdx + 1) % heroSlides.length);
