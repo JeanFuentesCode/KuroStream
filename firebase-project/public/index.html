@@ -209,7 +209,7 @@
 <body>
 
     <nav class="fixed top-0 w-full z-[100] px-6 py-6 flex justify-between items-center" id="main-nav">
-        <div class="logo-container">
+        <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 20L80 50L20 80V55L45 50L20 45V20Z" fill="url(#logo-grad)" filter="url(#glow)"/>
                 <defs>
@@ -250,6 +250,7 @@
     </div>
 
     <main>
+        <!-- Hero Section con Carrusel Automático -->
         <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
             <div id="hero-loader" class="loader-container">
                 <div class="kinetic-loader"></div>
@@ -278,6 +279,7 @@
             </div>
         </section>
 
+        <!-- Sección de Catálogo -->
         <div id="library-section" class="max-w-[1440px] mx-auto px-6 mt-16 relative z-40 pb-32">
             <div class="flex flex-col items-center mb-12">
                 <h3 class="text-4xl md:text-5xl font-bebas tracking-tighter italic text-center">EXPLORA LO <span class="text-primary">ÚLTIMO</span></h3>
@@ -289,6 +291,7 @@
 
     <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js" defer></script>
     <script>
+        // CONFIGURACIÓN DE RUTAS LOCALES (No tocadas según tu petición)
         const heroSlides = [
             { title: "SOLO <span class='text-primary'>LEVELING</span>", desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto.", tag: "Tendencia", info: "S1 • Acción / Fantasía", img: "./images/imagen1.webp" },
             { title: "ONE <span class='text-primary'>PIECE</span>", desc: "Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.", tag: "Legendario", info: "Ep 1115 • Aventura", img: "./images/imagen2.webp" },
@@ -298,18 +301,18 @@
         ];
 
         const catalog = [
-            { t: "Kaiju No. 8", g: "Acción", i: "" },
-            { t: "Tokyo Revengers", g: "Drama", i: "" },
-            { t: "Mushoku Tensei", g: "Isekai", i: "" },
-            { t: "Naruto", g: "Ninja", i: "" },
-            { t: "Bleach TYBW", g: "Espadas", i: "" },
-            { t: "Blue Lock", g: "Deportes", i: "" },
-            { t: "Chainsaw Man", g: "Acción", i: "" },
-            { t: "Spy x Family", g: "Comedia", i: "" },
-            { t: "Oshi No Ko", g: "Drama", i: "" },
-            { t: "Haikyuu!!", g: "Deportes", i: "" },
-            { t: "Black Clover", g: "Magia", i: "" },
-            { t: "Vinland Saga", g: "Seinen", i: "" }
+            { t: "Kaiju No. 8", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=K8" },
+            { t: "Tokyo Revengers", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=TR" },
+            { t: "Mushoku Tensei", g: "Isekai", i: "https://placehold.co/400x600/101010/white?text=MT" },
+            { t: "Naruto", g: "Ninja", i: "https://placehold.co/400x600/101010/white?text=N" },
+            { t: "Bleach TYBW", g: "Espadas", i: "https://placehold.co/400x600/101010/white?text=B" },
+            { t: "Blue Lock", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=BL" },
+            { t: "Chainsaw Man", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=CM" },
+            { t: "Spy x Family", g: "Comedia", i: "https://placehold.co/400x600/101010/white?text=SXF" },
+            { t: "Oshi No Ko", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=ONK" },
+            { t: "Haikyuu!!", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=HQ" },
+            { t: "Black Clover", g: "Magia", i: "https://placehold.co/400x600/101010/white?text=BC" },
+            { t: "Vinland Saga", g: "Seinen", i: "https://placehold.co/400x600/101010/white?text=VS" }
         ];
 
         let currentIdx = 0;
@@ -332,6 +335,8 @@
             }
 
             const targetImg = activeLayer === 1 ? layer2 : layer1;
+            
+            // Mostrar loader suave si la imagen tarda
             loader.style.opacity = '1';
             targetImg.src = nextSlide.img;
             
@@ -346,21 +351,35 @@
                     layer1.classList.replace('img-next', 'img-active');
                     activeLayer = 1;
                 }
+                
                 currentIdx = index;
+                
+                // Actualizar Textos
                 document.getElementById('hero-title').innerHTML = nextSlide.title;
                 document.getElementById('hero-desc').textContent = nextSlide.desc;
                 document.getElementById('hero-tag').textContent = nextSlide.tag;
                 document.getElementById('hero-info').textContent = nextSlide.info;
+                
                 heroWrapper.classList.remove('hero-text-exit');
                 if (isFirstLoad) heroWrapper.classList.add('revealed');
+                
+                // Forzar reflow para reiniciar animación
                 void heroWrapper.offsetWidth; 
                 heroWrapper.classList.add('hero-text-anim');
                 isTransitioning = false;
             };
-            targetImg.onerror = () => { loader.style.opacity = '0'; isTransitioning = false; };
+
+            targetImg.onerror = () => {
+                console.error("No se pudo cargar la imagen:", nextSlide.img);
+                loader.style.opacity = '0';
+                isTransitioning = false;
+                // Intentar la siguiente tras un error
+                setTimeout(() => changeSlide((index + 1) % heroSlides.length), 3000);
+            };
         }
 
         function init() {
+            // Renderizar Grilla
             const grid = document.getElementById('anime-grid');
             grid.innerHTML = catalog.map(item => `
                 <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
@@ -375,30 +394,39 @@
                 </div>
             `).join('');
             
+            // Observer para entrada suave de las cards
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => { entry.target.classList.add('in-view'); }, index * 30); 
+                        setTimeout(() => { 
+                            entry.target.classList.add('in-view'); 
+                        }, index * 30); 
                     }
                 });
             }, { threshold: 0.05 });
 
             document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
+
+            // Iniciar Carrusel
             changeSlide(0, true);
             setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 7000);
+            
             if(window.lucide) lucide.createIcons();
             
+            // Lógica de Scroll Navbar
             let lastScrollY = window.scrollY;
             const nav = document.getElementById('main-nav');
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 nav.classList.toggle('nav-scrolled', currentScrollY > 50);
+                
                 if (currentScrollY > 80) {
                     nav.classList.toggle('nav-hidden', currentScrollY > lastScrollY);
                 }
                 lastScrollY = currentScrollY;
             }, { passive: true });
         }
+
         window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
