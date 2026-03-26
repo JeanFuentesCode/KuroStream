@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KuroStream - La plataforma de streaming de anime de alto rendimiento. Disfruta de tus series favoritas en la mejor calidad.">
     <title>KuroStream | High Performance</title>
     
-    <!-- Preload de la imagen crítica (LCP) - Manteniendo tu ruta local -->
+    <!-- Pre-carga crítica de la primera imagen para LCP -->
     <link rel="preload" as="image" href="./images/imagen1.webp" fetchpriority="high">
     
     <!-- Favicon dinámico -->
@@ -15,7 +14,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Tailwind optimizado -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
@@ -25,9 +23,9 @@
             --primary-glow: rgba(255, 0, 60, 0.4);
             --bg-deep: #050505;
             --card-bg: #0d0d0f;
+            --glitter: url("https://assets.codepen.io/13471/silver-glitter-background.png");
         }
         
-        /* Optimización de scroll */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb {
@@ -47,42 +45,65 @@
         .font-bebas { font-family: 'Bebas Neue', cursive; }
         .crimson-gradient { background: linear-gradient(135deg, #ff003c 0%, #990024 100%); }
 
-        /* NAV OPTIMIZADA - Evita Layout Thrashing */
         #main-nav {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
-            will-change: transform, background;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+            will-change: transform, background-color, backdrop-filter;
         }
+
         .nav-scrolled {
-            background: rgba(5, 5, 5, 0.95) !important;
-            backdrop-filter: blur(10px);
-            padding-top: 0.7rem !important;
-            padding-bottom: 0.7rem !important;
+            background: rgba(5, 5, 5, 0.9) !important;
+            backdrop-filter: blur(15px);
+            padding-top: 0.8rem !important;
+            padding-bottom: 0.8rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .nav-hidden { transform: translateY(-110%); }
 
-        /* EFECTO FUEGO OPTIMIZADO - Eliminado PNG de 1.4MB */
+        .logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+
+        .nav-link-desktop {
+            position: relative;
+            padding: 8px 14px;
+            color: #a1a1aa;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .nav-link-desktop:hover { color: white; background: rgba(255, 255, 255, 0.05); }
+        .nav-link-desktop.active { color: var(--primary); background: rgba(255, 0, 60, 0.1); }
+
         .fire-effect::after {
             content: "";
             position: absolute;
             inset: 0;
-            /* Usamos gradientes CSS en lugar de imágenes externas pesadas */
-            background: linear-gradient(0deg, var(--primary) 0%, #ff8951 50%, transparent 100%);
-            filter: blur(8px);
+            background-image: var(--glitter), var(--glitter),
+                linear-gradient(0deg, white 0px, #ff8951 2px, rgba(220, 188, 22, 0.4) 10%, transparent 100%);
+            background-size: 150px 100px, 200px 150px, 100% 100%;
+            background-blend-mode: hard-light, color-dodge;
+            mix-blend-mode: color-dodge;
+            filter: brightness(2.5) blur(4px) contrast(4);
+            animation: fireMove 1.5s linear infinite;
+            pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
             z-index: -1;
-            border-radius: inherit;
+            border-radius: 9999px;
         }
-        .fire-effect:hover::after {
-            opacity: 0.6;
-            animation: firePulse 1.5s ease-in-out infinite;
-        }
-        @keyframes firePulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.05); opacity: 0.7; }
+        
+        .fire-effect:hover::after { opacity: 1; }
+
+        @keyframes fireMove {
+            0% { background-position: center 0px, center 0px, 50% 100%; }
+            100% { background-position: center -100px, center -150px, 50% 100%; }
         }
 
-        /* LOADER */
         .loader-container {
             position: absolute;
             inset: 0;
@@ -92,64 +113,111 @@
             background: var(--bg-deep);
             z-index: 60;
             transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
-        /* HERO LAYERS */
-        .hero-mask {
-            background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.4) 40%, transparent 100%),
-                        linear-gradient(to top, var(--bg-deep) 10%, transparent 60%);
+        .kinetic-loader { width: 50px; height: 50px; position: relative; }
+        .kinetic-loader::before, .kinetic-loader::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: kineticSpin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
+        .kinetic-loader::after { border-top-color: white; animation-delay: -0.4s; }
+
+        @keyframes kineticSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .hero-mask {
+            background: linear-gradient(to right, var(--bg-deep) 0%, rgba(5, 5, 5, 0.6) 30%, transparent 100%),
+                        linear-gradient(to top, var(--bg-deep) 10%, transparent 50%);
+            pointer-events: none;
+        }
+
         .hero-img-layer {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 1s ease-in-out;
-            filter: brightness(0.7);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(0.8);
             will-change: opacity;
         }
+
         .img-active { opacity: 1; z-index: 5; }
         .img-next { opacity: 0; z-index: 4; }
 
-        /* ANIMACIONES COMPUESTAS (GPU) */
-        .hero-text-anim { 
-            animation: heroSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-            will-change: transform, opacity;
-        }
+        .hero-text-anim { animation: heroSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; will-change: transform, opacity, filter; }
         @keyframes heroSlideIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* CARDS OPTIMIZADAS */
+        .hero-text-exit { animation: heroSlideOut 0.5s ease-in forwards; will-change: transform, opacity, filter; }
+        @keyframes heroSlideOut {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-15px); filter: blur(5px); }
+        }
+
+        .float-animation { animation: float 4s ease-in-out infinite; will-change: transform; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+
         .anime-card {
             background: var(--card-bg);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, opacity 0.6s, box-shadow 0.4s;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            opacity: 0;
+            transform: translateY(30px);
             will-change: transform, opacity;
         }
+
         .anime-card.in-view { opacity: 1; transform: translateY(0); }
+        .anime-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px -10px var(--primary-glow);
+        }
+
+        .reveal-init { opacity: 0; transition: opacity 1s ease-out; }
+        .revealed { opacity: 1 !important; }
 
         .mobile-nav {
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(13, 13, 15, 0.96);
-            backdrop-filter: blur(12px);
+            background: rgba(13, 13, 15, 0.95);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 6px;
             display: none;
+            align-items: center;
+            gap: 4px;
             z-index: 200;
         }
-        @media (max-width: 1024px) { .mobile-nav { display: flex; } }
+
+        @media (pointer: coarse), (max-width: 1024px) { .mobile-nav { display: flex; } }
+
+        .mobile-nav-item { padding: 10px 14px; border-radius: 18px; color: #888; transition: color 0.3s; }
+        .mobile-nav-item.active { color: white; }
+        .mobile-nav-search { background: var(--primary); color: white; padding: 12px; border-radius: 18px; box-shadow: 0 4px 12px var(--primary-glow); }
     </style>
 </head>
 <body>
 
     <nav class="fixed top-0 w-full z-[100] px-6 py-6 flex justify-between items-center" id="main-nav">
-        <div class="logo-container" aria-label="Volver al inicio">
+        <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 20L80 50L20 80V55L45 50L20 45V20Z" fill="url(#logo-grad)" filter="url(#glow)"/>
                 <defs>
@@ -163,53 +231,54 @@
                     </filter>
                 </defs>
             </svg>
-            <span class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></span>
+            <h1 class="font-bebas text-2xl md:text-3xl tracking-tighter italic">KURO<span class="text-primary">STREAM</span></h1>
         </div>
 
         <div class="hidden lg:flex items-center gap-4">
-            <div class="flex items-center gap-1 bg-[#0d0d0f] border border-white/10 px-2 py-1.5 rounded-2xl">
-                <a href="#" class="nav-link-desktop active" aria-label="Inicio"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
-                <a href="#" class="nav-link-desktop" aria-label="Explorar"><i data-lucide="compass" class="w-4 h-4"></i> Explorar</a>
-                <a href="#" class="nav-link-desktop" aria-label="Buscar"><i data-lucide="search" class="w-4 h-4"></i> Buscar</a>
+            <div class="flex items-center gap-1 bg-[#0d0d0f] border border-white/10 px-2 py-1.5 rounded-2xl shadow-2xl">
+                <a href="#" class="nav-link-desktop active"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="compass" class="w-4 h-4"></i> Explorar</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="search" class="w-4 h-4"></i> Buscar</a>
+                <a href="#" class="nav-link-desktop"><i data-lucide="bookmark" class="w-4 h-4"></i> Mi Lista</a>
             </div>
-            <button class="fire-effect bg-white text-black font-black text-[12px] uppercase px-8 py-3 rounded-full relative">Acceder</button>
+            <button class="fire-effect bg-white text-black font-black text-[12px] uppercase px-8 py-3 rounded-full transition-all duration-300 hover:scale-110 shadow-xl relative overflow-hidden">Acceder</button>
         </div>
 
         <div class="lg:hidden">
-            <button class="fire-effect bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full">Acceder</button>
+            <button class="fire-effect bg-white text-black font-black text-[10px] uppercase px-6 py-2 rounded-full shadow-xl relative overflow-hidden">Acceder</button>
         </div>
     </nav>
 
     <div class="mobile-nav" id="mobile-menu">
-        <a href="#" class="p-3 text-white" aria-label="Inicio"><i data-lucide="home" class="w-5 h-5"></i></a>
-        <a href="#" class="p-3 text-gray-500" aria-label="Explorar"><i data-lucide="compass" class="w-5 h-5"></i></a>
-        <div class="p-3 bg-primary rounded-full text-white mx-1" aria-label="Buscar"><i data-lucide="search" class="w-5 h-5"></i></div>
-        <a href="#" class="p-3 text-gray-500" aria-label="Marcadores"><i data-lucide="bookmark" class="w-5 h-5"></i></a>
-        <a href="#" class="p-3 text-gray-500" aria-label="Usuario"><i data-lucide="user" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item active"><i data-lucide="home" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="compass" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="bookmark" class="w-5 h-5"></i></a>
+        <a href="#" class="mobile-nav-item"><i data-lucide="user" class="w-5 h-5"></i></a>
     </div>
 
     <main>
         <section class="relative h-[90vh] md:h-[95vh] w-full flex items-center overflow-hidden bg-black">
             <div id="hero-loader" class="loader-container">
-                <div class="kinetic-loader" aria-hidden="true"></div>
+                <div class="kinetic-loader"></div>
             </div>
 
             <div class="absolute inset-0" id="hero-bg-container">
-                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="Anime de temporada" decoding="async">
+                <img id="img-layer-1" src="" class="hero-img-layer img-active" alt="Hero Background" decoding="async" fetchpriority="high">
                 <img id="img-layer-2" src="" class="hero-img-layer img-next" alt="" decoding="async">
                 <div class="absolute inset-0 hero-mask z-10"></div>
             </div>
 
             <div class="relative w-full max-w-[1440px] mx-auto px-6 z-20 pt-20">
-                <div id="hero-content-wrapper" class="max-w-2xl space-y-6 opacity-0">
+                <div id="hero-content-wrapper" class="max-w-2xl space-y-6 reveal-init">
                     <div class="flex items-center gap-3">
-                        <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter"></span>
+                        <span id="hero-tag" class="bg-primary px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20"></span>
                         <span id="hero-info" class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]"></span>
                     </div>
                     <h2 id="hero-title" class="text-6xl md:text-9xl font-bold leading-[0.85] text-white uppercase tracking-tighter"></h2>
                     <p id="hero-desc" class="text-base md:text-lg text-gray-300 max-w-lg font-medium leading-relaxed border-l-2 border-primary pl-5"></p>
                     <div class="flex items-center gap-4 pt-4">
-                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3">
+                        <button class="float-animation crimson-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:brightness-110 shadow-lg shadow-primary/20">
                             <i data-lucide="play" class="w-5 h-5 fill-current"></i> Ver Ahora
                         </button>
                     </div>
@@ -228,7 +297,6 @@
 
     <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js" defer></script>
     <script>
-        // MANTENIENDO TUS RUTAS ORIGINALES
         const heroSlides = [
             { title: "SOLO <span class='text-primary'>LEVELING</span>", desc: "Del más débil al más fuerte. Sung Jinwoo despierta un sistema de niveles secreto.", tag: "Tendencia", info: "S1 • Acción / Fantasía", img: "./images/imagen1.webp" },
             { title: "ONE <span class='text-primary'>PIECE</span>", desc: "Únete a Luffy en el arco de Egghead mientras el mundo se prepara para la guerra final.", tag: "Legendario", info: "Ep 1115 • Aventura", img: "./images/imagen2.webp" },
@@ -237,12 +305,25 @@
             { title: "JUJUTSU <span class='text-primary'>KAISEN</span>", desc: "La expansión de dominio es solo el comienzo. Itadori se enfrenta a su destino.", tag: "Popular", info: "S2 • Sobrenatural", img: "./images/imagen5.webp" }
         ];
 
-        // Placeholder para catálogo (esto debería venir de tu backend)
-        const catalog = Array(12).fill({ t: "Cargando...", g: "Acción", i: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" });
+        const catalog = [
+            { t: "Kaiju No. 8", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=K8" },
+            { t: "Tokyo Revengers", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=TR" },
+            { t: "Mushoku Tensei", g: "Isekai", i: "https://placehold.co/400x600/101010/white?text=MT" },
+            { t: "Naruto", g: "Ninja", i: "https://placehold.co/400x600/101010/white?text=N" },
+            { t: "Bleach TYBW", g: "Espadas", i: "https://placehold.co/400x600/101010/white?text=B" },
+            { t: "Blue Lock", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=BL" },
+            { t: "Chainsaw Man", g: "Acción", i: "https://placehold.co/400x600/101010/white?text=CM" },
+            { t: "Spy x Family", g: "Comedia", i: "https://placehold.co/400x600/101010/white?text=SXF" },
+            { t: "Oshi No Ko", g: "Drama", i: "https://placehold.co/400x600/101010/white?text=ONK" },
+            { t: "Haikyuu!!", g: "Deportes", i: "https://placehold.co/400x600/101010/white?text=HQ" },
+            { t: "Black Clover", g: "Magia", i: "https://placehold.co/400x600/101010/white?text=BC" },
+            { t: "Vinland Saga", g: "Seinen", i: "https://placehold.co/400x600/101010/white?text=VS" }
+        ];
 
         let currentIdx = 0;
         let activeLayer = 1;
         let isTransitioning = false;
+        let slideInterval;
         const heroWrapper = document.getElementById('hero-content-wrapper');
         const loader = document.getElementById('hero-loader');
 
@@ -253,84 +334,106 @@
             const nextSlide = heroSlides[index];
             const layer1 = document.getElementById('img-layer-1');
             const layer2 = document.getElementById('img-layer-2');
-            const targetImg = activeLayer === 1 ? layer2 : layer1;
             
-            // Animación de salida sin usar offsetWidth (evita reflow forzado)
             if (!isFirstLoad) {
-                heroWrapper.style.opacity = "0";
+                heroWrapper.classList.remove('hero-text-anim');
+                heroWrapper.classList.add('hero-text-exit');
             }
 
-            targetImg.src = nextSlide.img;
+            const targetImg = activeLayer === 1 ? layer2 : layer1;
             
-            targetImg.onload = () => {
+            // Pre-cargar la imagen antes de cambiar
+            const imgPreloader = new Image();
+            imgPreloader.src = nextSlide.img;
+            
+            imgPreloader.onload = () => {
+                targetImg.src = nextSlide.img;
                 loader.style.opacity = '0';
+                
                 if (activeLayer === 1) {
-                    layer1.classList.remove('img-active'); layer1.classList.add('img-next');
-                    layer2.classList.remove('img-next'); layer2.classList.add('img-active');
+                    layer1.classList.replace('img-active', 'img-next');
+                    layer2.classList.replace('img-next', 'img-active');
                     activeLayer = 2;
                 } else {
-                    layer2.classList.remove('img-active'); layer2.classList.add('img-next');
-                    layer1.classList.remove('img-next'); layer1.classList.add('img-active');
+                    layer2.classList.replace('img-active', 'img-next');
+                    layer1.classList.replace('img-next', 'img-active');
                     activeLayer = 1;
                 }
                 
                 currentIdx = index;
-                document.getElementById('hero-title').innerHTML = nextSlide.title;
-                document.getElementById('hero-desc').textContent = nextSlide.desc;
-                document.getElementById('hero-tag').textContent = nextSlide.tag;
-                document.getElementById('hero-info').textContent = nextSlide.info;
                 
-                // Animación de entrada
-                heroWrapper.classList.add('hero-text-anim');
-                heroWrapper.style.opacity = "1";
+                setTimeout(() => {
+                    document.getElementById('hero-title').innerHTML = nextSlide.title;
+                    document.getElementById('hero-desc').textContent = nextSlide.desc;
+                    document.getElementById('hero-tag').textContent = nextSlide.tag;
+                    document.getElementById('hero-info').textContent = nextSlide.info;
+                    
+                    heroWrapper.classList.remove('hero-text-exit');
+                    if (isFirstLoad) heroWrapper.classList.add('revealed');
+                    
+                    void heroWrapper.offsetWidth; 
+                    heroWrapper.classList.add('hero-text-anim');
+                    isTransitioning = false;
+                }, isFirstLoad ? 0 : 300);
+            };
+
+            imgPreloader.onerror = () => {
                 isTransitioning = false;
+                if(!isFirstLoad) changeSlide((index + 1) % heroSlides.length);
             };
         }
 
         function init() {
-            // Renderizado de grilla simplificado para performance
             const grid = document.getElementById('anime-grid');
-            grid.innerHTML = heroSlides.concat(heroSlides).slice(0, 12).map(item => `
-                <div class="anime-card rounded-xl overflow-hidden group opacity-0 translate-y-4 transition-all duration-500">
-                    <div class="relative aspect-[2/3] bg-neutral-900">
-                        <img src="${item.img}" class="w-full h-full object-cover" loading="lazy" alt="${item.title.replace(/<[^>]*>?/gm, '')}">
+            grid.innerHTML = catalog.map(item => `
+                <div class="anime-card rounded-xl overflow-hidden group cursor-pointer">
+                    <div class="relative aspect-[2/3] overflow-hidden bg-neutral-900">
+                        <img src="${item.i}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110" loading="lazy" alt="${item.t}" decoding="async">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-3 left-3 right-3">
-                            <span class="text-primary font-black text-[8px] uppercase block">${item.info}</span>
-                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.title.replace(/<[^>]*>?/gm, '')}</h4>
+                            <span class="text-primary font-black text-[8px] uppercase block mb-0.5">${item.g}</span>
+                            <h4 class="text-xs font-bold truncate text-white uppercase">${item.t}</h4>
                         </div>
                     </div>
                 </div>
             `).join('');
-
-            // Intersection Observer optimizado
-            const obs = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.remove('opacity-0', 'translate-y-4');
-                        obs.unobserve(entry.target);
+                        entry.target.classList.add('in-view'); 
+                        observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.anime-card').forEach(c => obs.observe(c));
+            }, { threshold: 0.1, rootMargin: '50px' });
 
-            // Start
+            document.querySelectorAll('.anime-card').forEach(card => observer.observe(card));
+
             changeSlide(0, true);
-            setInterval(() => changeSlide((currentIdx + 1) % heroSlides.length), 6000);
+            slideInterval = setInterval(() => {
+                if (!document.hidden) changeSlide((currentIdx + 1) % heroSlides.length);
+            }, 7000);
             
-            // Nav Scroll optimizado sin Layout Thrashing
-            let lastScroll = 0;
-            const nav = document.getElementById('main-nav');
-            window.addEventListener('scroll', () => {
-                const now = window.scrollY;
-                nav.classList.toggle('nav-scrolled', now > 20);
-                if (now > 100) {
-                    nav.classList.toggle('nav-hidden', now > lastScroll);
-                }
-                lastScroll = now;
-            }, { passive: true });
-
             if(window.lucide) lucide.createIcons();
+            
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const nav = document.getElementById('main-nav');
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const currentScrollY = window.scrollY;
+                        nav.classList.toggle('nav-scrolled', currentScrollY > 50);
+                        if (currentScrollY > 80) {
+                            nav.classList.toggle('nav-hidden', currentScrollY > lastScrollY);
+                        }
+                        lastScrollY = currentScrollY;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
         }
 
         window.addEventListener('DOMContentLoaded', init);
